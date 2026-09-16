@@ -1,0 +1,24 @@
+title: io_uring Registration Abuse
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000011
+status: stable
+description: Detects io_uring setup/registration syscall usage from containers — a recurring kernel exploit primitive (CE-008).
+references:
+  - https://www.cisa.gov/known-exploited-vulnerabilities-catalog
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1068
+  - attack.t1611
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains:
+      - 'io_uring_setup'
+      - 'io_uring_register'
+      - 'IORING_REGISTER'
+  condition: selection
+falsepositives:
+  - High-performance async I/O applications legitimately using io_uring
+level: medium

@@ -1,0 +1,7 @@
+# pidfd_getfd syscall — CE-002
+- rule: pidfd_getfd Syscall
+  desc: Detect pidfd_getfd syscalls that duplicate file descriptors from other processes.
+  condition: evt.type = pidfd_getfd
+  output: pidfd_getfd called (proc=%proc.name pid=%proc.pid user=%user.name container=%container.name)
+  priority: WARNING
+  tags: [container, escape, fd-stealing, mitre_t1055]

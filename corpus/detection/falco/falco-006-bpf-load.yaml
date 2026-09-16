@@ -1,0 +1,7 @@
+# eBPF program load — CE-006
+- rule: eBPF Program Load
+  desc: Detect bpf syscalls loading programs from containers.
+  condition: evt.type = bpf and container.id != host
+  output: bpf program load (proc=%proc.name container=%container.name)
+  priority: WARNING
+  tags: [container, ebpf, probe, mitre_t1040]

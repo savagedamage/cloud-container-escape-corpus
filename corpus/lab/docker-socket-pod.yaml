@@ -1,0 +1,20 @@
+# Docker socket pod — validates runtime socket abuse (container escape via
+# docker.sock: spawn privileged sibling container, read host FS).
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-socket-pod
+  namespace: vulnerable
+spec:
+  containers:
+    - name: dind-client
+      image: docker:27-cli
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock

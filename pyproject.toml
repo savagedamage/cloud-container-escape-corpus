@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "escape-corpus"
+version = "1.0.0"
+description = "Container escape research corpus: OCI image diffing, runtime drift baselining, and pod admission review"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "savagedamage" }]
+keywords = ["security", "containers", "kubernetes", "oci", "drift-detection", "threat-modeling"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+dependencies = ["pyyaml>=6.0"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "jsonschema>=4.18",
+]
+[project.urls]
+Homepage = "https://github.com/savagedamage/cloud-container-escape-corpus"
+
+[project.scripts]
+escape-corpus = "escape_corpus.cli:main"
+image-diff = "escape_corpus.image_diff:main"
+runtime-baseline = "escape_corpus.runtime_baseline:main"
+admission-review = "escape_corpus.admission_review:main"
+
+[tool.setuptools]
+packages = ["escape_corpus"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

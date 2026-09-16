@@ -1,0 +1,25 @@
+# hostPath /proc pod — validates host PID namespace access via /proc mount
+# (nsenter -t 1 style escape with sufficient capabilities).
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostpath-proc-pod
+  namespace: vulnerable
+spec:
+  containers:
+    - name: prober
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        capabilities:
+          add:
+            - SYS_ADMIN
+            - SYS_PTRACE
+      volumeMounts:
+        - name: hostproc
+          mountPath: /host/proc
+  volumes:
+    - name: hostproc
+      hostPath:
+        path: /proc

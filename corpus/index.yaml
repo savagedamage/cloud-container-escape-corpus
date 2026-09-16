@@ -1,0 +1,43 @@
+schema_version: "1.0"
+name: cloud-container-escape-corpus
+description: >
+  Container escape research corpus. Treats container images as binaries and
+  runtime state as device posture — the triage/delta/drift pattern from
+  malware analysis applied to OCI and Kubernetes.
+human_entrypoints:
+  - README.md
+  - corpus/INDEX.md
+machine_entrypoints:
+  - corpus/taxonomy/taxonomy.json
+  - corpus/index.yaml
+techniques:
+  - CE-001
+  - CE-002
+  - CE-003
+  - CE-004
+  - CE-005
+  - CE-006
+  - CE-007
+  - CE-008
+  - CE-009
+  - CE-010
+tools:
+  - name: image-diff
+    module: escape_corpus.image_diff
+    purpose: Risk-weighted delta between two OCI image tags
+    requires: [crane or skopeo, getcap (optional)]
+  - name: runtime-baseline
+    module: escape_corpus.runtime_baseline
+    purpose: Hash-chained /proc/cgroup/cap/ns/mount snapshot with drift detection
+    requires: [docker or podman or crictl]
+  - name: admission-review
+    module: escape_corpus.admission_review
+    purpose: Pod spec dry-run against 40+ security checks and custom policies
+    requires: [pyyaml]
+schemas:
+  - schemas/taxonomy.schema.json
+  - schemas/image-diff.schema.json
+  - schemas/baseline-snapshot.schema.json
+  - schemas/admission-report.schema.json
+validation: escape-corpus validate
+tests: python -m pytest tests/

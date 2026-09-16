@@ -1,0 +1,8 @@
+# nsenter namespace escape — CE-007, CE-009
+- rule: nsenter Namespace Escape
+  desc: Detect nsenter execution from within a container, a host namespace join primitive.
+  condition: >
+    spawned_process and proc.name = nsenter and container.id != host
+  output: nsenter in container (proc=%proc.name args=%proc.args container=%container.name)
+  priority: CRITICAL
+  tags: [container, escape, namespace, mitre_t1611]

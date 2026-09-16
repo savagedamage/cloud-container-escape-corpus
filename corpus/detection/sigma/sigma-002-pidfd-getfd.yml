@@ -1,0 +1,24 @@
+title: pidfd_getfd Syscall Usage
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000002
+status: stable
+description: Detects pidfd_open/pidfd_getfd syscall usage — file descriptor theft from other processes (CE-002). Primarily visible via auditd syscall logging or seccomp notifications.
+references:
+  - https://man7.org/linux/man-pages/man2/pidfd_getfd.2.html
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1055
+  - attack.t1611
+  - attack.privilege-escalation
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains:
+      - 'pidfd_getfd'
+      - 'pidfd_open'
+  condition: selection
+falsepositives:
+  - Debuggers and process supervisors that legitimately use pidfd APIs
+level: high

@@ -1,0 +1,23 @@
+title: chroot into Host Root
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000009
+status: stable
+description: Detects chroot usage targeting mounted host paths — hostPath volume escape (CE-007).
+references:
+  - https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1611
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith: '/chroot'
+    CommandLine|contains:
+      - '/host'
+      - '/hostfs'
+  condition: selection
+falsepositives:
+  - Build tooling that legitimately uses chroot into image roots
+level: high

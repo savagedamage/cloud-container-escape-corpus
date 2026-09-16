@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: escape-test-pod
+  namespace: default
+  labels:
+    app: escape-test
+spec:
+  hostNetwork: true
+  hostPID: true
+  serviceAccountName: default
+  containers:
+    - name: escape-container
+      image: ubuntu:latest
+      command: ["/bin/bash", "-c", "sleep 3600"]
+      securityContext:
+        privileged: true
+        allowPrivilegeEscalation: true
+        capabilities:
+          add:
+            - SYS_ADMIN
+            - SYS_PTRACE
+            - NET_ADMIN
+            - DAC_OVERRIDE
+            - DAC_READ_SEARCH
+            - SETUID
+            - SETGID
+            - BPF
+            - PERFMON
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: host-proc
+          mountPath: /host/proc
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+      env:
+        - name: API_TOKEN
+          value: "hardcoded-secret-token-12345"
+      resources: {}
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+    - name: host-proc
+      hostPath:
+        path: /proc
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup

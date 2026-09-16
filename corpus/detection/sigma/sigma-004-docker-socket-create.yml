@@ -1,0 +1,24 @@
+title: Docker Socket Container Create
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000004
+status: stable
+description: Detects container creation through a mounted docker.sock — runtime socket abuse (CE-004).
+references:
+  - https://docs.docker.com/engine/security/
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1611
+  - attack.t1525
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith: '/docker'
+    CommandLine|contains|all:
+      - 'run'
+      - 'unix:///var/run/docker.sock'
+  condition: selection
+falsepositives:
+  - Legitimate dind CI pipelines (should still be reviewed)
+level: high

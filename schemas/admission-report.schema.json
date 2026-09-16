@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/savagedamage/cloud-container-escape-corpus/schemas/admission-report.schema.json",
+  "title": "admission-review report",
+  "type": "object",
+  "required": ["pod_name", "namespace", "total_findings", "risk_score", "risk_level", "findings", "passed_checks", "policy_violations"],
+  "properties": {
+    "pod_name": { "type": "string" },
+    "namespace": { "type": "string" },
+    "total_findings": { "type": "integer", "minimum": 0 },
+    "risk_score": { "type": "integer", "minimum": 0 },
+    "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "check", "description", "remediation", "policy_source"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+          "check": { "type": "string" },
+          "description": { "type": "string" },
+          "remediation": { "type": "string" },
+          "policy_source": { "type": "string" }
+        }
+      }
+    },
+    "passed_checks": { "type": "array", "items": { "type": "string" } },
+    "policy_violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "check", "description", "remediation", "policy_source"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+          "check": { "type": "string" },
+          "description": { "type": "string" },
+          "remediation": { "type": "string" },
+          "policy_source": { "type": "string" }
+        }
+      }
+    }
+  }
+}

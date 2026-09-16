@@ -1,0 +1,23 @@
+title: Privileged Pod Creation
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000010
+status: stable
+description: Detects Kubernetes API requests creating pods with privileged security context — RBAC escalation into cluster takeover (CE-003, CE-007).
+references:
+  - https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1611
+  - attack.t1078
+logsource:
+  category: audit
+  product: kubernetes
+detection:
+  selection:
+    verb: create
+    objectRef.resource: pods
+    requestObject.spec.containers.securityContext.privileged: 'true'
+  condition: selection
+falsepositives:
+  - Authorized cluster components creating privileged pods (kube-system)
+level: high

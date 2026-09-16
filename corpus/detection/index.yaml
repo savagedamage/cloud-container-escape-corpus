@@ -1,0 +1,117 @@
+schema_version: "1.0"
+description: Detection rule index for the Cloud/Container Escape Corpus.
+rules:
+  - id: SIGMA-001
+    engine: sigma
+    title: cgroup release_agent Write
+    file: sigma/sigma-001-cgroup-release-agent.yml
+    detects: [CE-001]
+    level: critical
+  - id: SIGMA-002
+    engine: sigma
+    title: pidfd_getfd Syscall Usage
+    file: sigma/sigma-002-pidfd-getfd.yml
+    detects: [CE-002]
+    level: high
+  - id: SIGMA-003
+    engine: sigma
+    title: nsenter or setns Namespace Join
+    file: sigma/sigma-003-nsenter-setns.yml
+    detects: [CE-007, CE-009]
+    level: high
+  - id: SIGMA-004
+    engine: sigma
+    title: Docker Socket Container Create
+    file: sigma/sigma-004-docker-socket-create.yml
+    detects: [CE-004]
+    level: high
+  - id: SIGMA-005
+    engine: sigma
+    title: runc /proc/self/exe Overwrite Attempt
+    file: sigma/sigma-005-runc-proc-self-exe.yml
+    detects: [CE-005]
+    level: critical
+  - id: SIGMA-006
+    engine: sigma
+    title: eBPF Program Load
+    file: sigma/sigma-006-bpf-load.yml
+    detects: [CE-006]
+    level: medium
+  - id: SIGMA-007
+    engine: sigma
+    title: Kernel Module Load
+    file: sigma/sigma-007-kernel-module-load.yml
+    detects: [CE-010]
+    level: high
+  - id: SIGMA-008
+    engine: sigma
+    title: Shadow File Read (DAC_OVERRIDE)
+    file: sigma/sigma-008-shadow-read.yml
+    detects: [CE-007, CE-010]
+    level: high
+  - id: SIGMA-009
+    engine: sigma
+    title: chroot into Host Root
+    file: sigma/sigma-009-chroot-host.yml
+    detects: [CE-007]
+    level: high
+  - id: SIGMA-010
+    engine: sigma
+    title: Privileged Pod Creation
+    file: sigma/sigma-010-privileged-pod.yml
+    detects: [CE-003]
+    level: high
+  - id: SIGMA-011
+    engine: sigma
+    title: io_uring Registration Abuse
+    file: sigma/sigma-011-io-uring.yml
+    detects: [CE-008]
+    level: medium
+  - id: FALCO-001
+    engine: falco
+    title: cgroup release_agent Write
+    file: falco/falco-001-cgroup-release-agent.yaml
+    detects: [CE-001]
+    level: CRITICAL
+  - id: FALCO-002
+    engine: falco
+    title: pidfd_getfd Syscall
+    file: falco/falco-002-pidfd-getfd.yaml
+    detects: [CE-002]
+    level: WARNING
+  - id: FALCO-003
+    engine: falco
+    title: nsenter Namespace Escape
+    file: falco/falco-003-nsenter.yaml
+    detects: [CE-007, CE-009]
+    level: CRITICAL
+  - id: FALCO-004
+    engine: falco
+    title: Container Created via Runtime Socket
+    file: falco/falco-004-runtime-socket.yaml
+    detects: [CE-004]
+    level: CRITICAL
+  - id: FALCO-005
+    engine: falco
+    title: runc proc_self_exe Overwrite
+    file: falco/falco-005-runc-overwrite.yaml
+    detects: [CE-005]
+    level: CRITICAL
+  - id: FALCO-006
+    engine: falco
+    title: eBPF Program Load
+    file: falco/falco-006-bpf-load.yaml
+    detects: [CE-006]
+    level: WARNING
+  - id: FALCO-007
+    engine: falco
+    title: Kernel Module Load
+    file: falco/falco-007-kernel-module.yaml
+    detects: [CE-010]
+    level: CRITICAL
+  - id: FALCO-008
+    engine: falco
+    title: Sensitive Host Path Mount
+    file: falco/falco-008-host-mount.yaml
+    detects: [CE-007]
+    level: HIGH

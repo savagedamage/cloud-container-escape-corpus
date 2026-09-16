@@ -1,0 +1,26 @@
+title: cgroup release_agent Write
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000001
+status: stable
+description: Detects writes to cgroup v1 release_agent or notify_on_release files — the classic container escape primitive (CE-001).
+references:
+  - https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1611
+  - attack.t1068
+  - attack.escape
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_release_agent:
+    CommandLine|contains:
+      - 'release_agent'
+  selection_notify:
+    CommandLine|contains:
+      - 'notify_on_release'
+  condition: selection_release_agent or selection_notify
+falsepositives:
+  - Container orchestration tooling managing cgroups (rare on hosts running cgroup v2)
+level: critical

@@ -1,0 +1,9 @@
+# Kernel module load — CE-010
+- rule: Kernel Module Load
+  desc: Detect insmod/modprobe execution from containers.
+  condition: >
+    spawned_process and container.id != host and
+    proc.name in (insmod, modprobe)
+  output: kernel module load attempt (proc=%proc.name container=%container.name)
+  priority: CRITICAL
+  tags: [container, escape, kernel-module, mitre_t1611]

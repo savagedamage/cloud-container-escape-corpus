@@ -1,0 +1,38 @@
+# Simplified Kyverno/OPA-style policies for admission_review.py --policies
+require-run-as-non-root:
+  kind: required
+  path: spec.containers[*].securityContext.runAsNonRoot
+  severity: HIGH
+  message: "All containers must set runAsNonRoot: true"
+  remediation: Set securityContext.runAsNonRoot to true on every container
+
+forbid-privileged:
+  kind: forbidden
+  path: spec.containers[*].securityContext.privileged
+  severity: CRITICAL
+  message: Privileged containers are forbidden
+  remediation: "Remove privileged: true and grant only required capabilities"
+
+forbid-host-network:
+  kind: forbidden
+  path: spec.hostNetwork
+  severity: HIGH
+  message: hostNetwork is forbidden
+  remediation: Use pod networking with CNI isolation
+
+drop-all-capabilities:
+  kind: equals
+  path: spec.containers[*].securityContext.capabilities.drop
+  value: [ALL]
+  severity: HIGH
+  message: Containers must drop ALL capabilities
+  remediation: "Set capabilities.drop: [ALL]"
+
+allowed-images:
+  kind: not_in
+  path: spec.containers[*].image
+  values:
+    - "ubuntu:latest"
+  severity: MEDIUM
+  message: Unpinned or untrusted image registry detected
+  remediation: Pin images by digest from approved registries

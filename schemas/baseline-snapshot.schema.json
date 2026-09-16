@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/savagedamage/cloud-container-escape-corpus/schemas/baseline-snapshot.schema.json",
+  "title": "runtime-baseline snapshot",
+  "type": "object",
+  "required": ["timestamp", "container_id", "capabilities", "cgroups", "namespaces", "proc", "mounts", "hash_chain"],
+  "properties": {
+    "timestamp": { "type": "string", "format": "date-time" },
+    "container_id": { "type": "string" },
+    "capabilities": {
+      "type": "object",
+      "required": ["cap_eff", "cap_prm", "cap_inh", "cap_bnd", "cap_amb", "seccomp_mode", "no_new_privs"],
+      "properties": {
+        "cap_eff": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "cap_prm": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "cap_inh": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "cap_bnd": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "cap_amb": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "securebits": { "type": "string" },
+        "seccomp_mode": { "type": "string" },
+        "no_new_privs": { "type": "boolean" }
+      }
+    },
+    "cgroups": {
+      "type": "object",
+      "required": ["cgroup_path", "cgroup_version", "controllers"],
+      "properties": {
+        "cgroup_path": { "type": "string" },
+        "cgroup_version": { "type": "string", "enum": ["v1", "v2"] },
+        "controllers": { "type": "array", "items": { "type": "string" } },
+        "cpu_limit": { "type": ["string", "null"] },
+        "memory_limit": { "type": ["string", "null"] },
+        "pids_limit": { "type": ["string", "null"] },
+        "cgroup_procs_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "namespaces": {
+      "type": "object",
+      "required": ["pid_ns", "mnt_ns", "net_ns", "uts_ns", "ipc_ns", "user_ns", "cgroup_ns", "time_ns"],
+      "properties": {
+        "pid_ns": { "type": "string" },
+        "mnt_ns": { "type": "string" },
+        "net_ns": { "type": "string" },
+        "uts_ns": { "type": "string" },
+        "ipc_ns": { "type": "string" },
+        "user_ns": { "type": "string" },
+        "cgroup_ns": { "type": "string" },
+        "time_ns": { "type": "string" }
+      }
+    },
+    "proc": {
+      "type": "object",
+      "required": ["pid", "ppid", "uid", "gid", "cmdline", "exe_link", "host_pid_visible"],
+      "properties": {
+        "pid": { "type": "integer" },
+        "ppid": { "type": "integer" },
+        "uid": { "type": "integer" },
+        "gid": { "type": "integer" },
+        "cmdline": { "type": "string" },
+        "exe_link": { "type": "string" },
+        "root_link": { "type": "string" },
+        "mounted_procs": { "type": "array", "items": { "type": "string" } },
+        "mounted_sys": { "type": "boolean" },
+        "host_pid_visible": { "type": "boolean" }
+      }
+    },
+    "mounts": {
+      "type": "object",
+      "required": ["docker_sock", "containerd_sock", "cri_o_sock", "host_root", "host_proc", "host_sys", "read_only_rootfs"],
+      "properties": {
+        "docker_sock": { "type": "boolean" },
+        "containerd_sock": { "type": "boolean" },
+        "cri_o_sock": { "type": "boolean" },
+        "host_root": { "type": "boolean" },
+        "host_proc": { "type": "boolean" },
+        "host_sys": { "type": "boolean" },
+        "sensitive_mounts": { "type": "array", "items": { "type": "string" } },
+        "read_only_rootfs": { "type": "boolean" }
+      }
+    },
+    "hash_chain": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "previous_hash": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+  }
+}

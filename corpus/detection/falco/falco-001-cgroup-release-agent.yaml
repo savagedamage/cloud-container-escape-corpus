@@ -1,0 +1,10 @@
+# cgroup release_agent write — CE-001
+- rule: Write to cgroup release_agent
+  desc: Detect writes to cgroup v1 release_agent or notify_on_release files, the classic container escape primitive.
+  condition: >
+    (evt.type in (open, openat, openat2, write) and
+     (fd.name endswith "release_agent" or fd.name endswith "notify_on_release") and
+     fd.name startswith "/sys/fs/cgroup/")
+  output: cgroup release_agent write detected (file=%fd.name user=%user.name container=%container.name proc=%proc.name)
+  priority: CRITICAL
+  tags: [container, escape, cgroup, mitre_t1611]

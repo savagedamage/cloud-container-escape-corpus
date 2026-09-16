@@ -1,0 +1,12 @@
+# Runtime socket container create — CE-004
+- rule: Container Created via Runtime Socket
+  desc: Detect container creation commands that reference a mounted runtime socket path.
+  condition: >
+    spawned_process and container.id != host and
+    (proc.name in (docker, ctr, crictl, nerdctl)) and
+    (proc.args contains "unix:///var/run/docker.sock" or
+     proc.args contains "/run/containerd/containerd.sock" or
+     proc.args contains "/run/crio/crio.sock")
+  output: runtime socket container create (proc=%proc.name args=%proc.args container=%container.name)
+  priority: CRITICAL
+  tags: [container, escape, runtime-socket, mitre_t1611]

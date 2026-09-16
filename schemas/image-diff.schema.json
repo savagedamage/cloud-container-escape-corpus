@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/savagedamage/cloud-container-escape-corpus/schemas/image-diff.schema.json",
+  "title": "image-diff output",
+  "type": "object",
+  "required": ["image_old", "image_new", "files_added", "files_removed", "files_modified", "total_risk_score", "risk_level"],
+  "properties": {
+    "image_old": { "type": "string" },
+    "image_new": { "type": "string" },
+    "files_added": { "type": "integer", "minimum": 0 },
+    "files_removed": { "type": "integer", "minimum": 0 },
+    "files_modified": { "type": "integer", "minimum": 0 },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "change_type", "risk_score", "risk_factors"],
+        "properties": {
+          "path": { "type": "string" },
+          "change_type": { "type": "string", "enum": ["added", "modified", "deleted"] },
+          "size_old": { "type": "integer", "minimum": 0 },
+          "size_new": { "type": "integer", "minimum": 0 },
+          "sha256_old": { "type": ["string", "null"] },
+          "sha256_new": { "type": ["string", "null"] },
+          "risk_score": { "type": "integer", "minimum": 0 },
+          "risk_factors": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "new_binaries": { "type": "array", "items": { "type": "string" } },
+    "new_capabilities": { "type": "array", "items": { "type": "string" } },
+    "entrypoint_changed": { "type": "boolean" },
+    "cmd_changed": { "type": "boolean" },
+    "user_changed": { "type": "boolean" },
+    "env_changes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": ["string", "null"] },
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "total_risk_score": { "type": "integer", "minimum": 0 },
+    "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] }
+  }
+}

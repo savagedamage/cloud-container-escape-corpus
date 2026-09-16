@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/savagedamage/cloud-container-escape-corpus/schemas/taxonomy.schema.json",
+  "title": "Container Escape Taxonomy",
+  "type": "object",
+  "required": ["schema_version", "name", "techniques"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "techniques": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "mitre_attack", "risk", "prerequisites", "guide", "detection_rule_ids"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^CE-\\d{3}$" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "aliases": { "type": "array", "items": { "type": "string" } },
+          "summary": { "type": "string" },
+          "mitre_attack": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^T\\d{4}(\\.\\d{3})?$" }
+          },
+          "risk": {
+            "type": "object",
+            "required": ["prevalence", "impact", "detectability", "overall"],
+            "properties": {
+              "prevalence": { "type": "string", "enum": ["low", "medium", "high"] },
+              "impact": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+              "detectability": { "type": "string", "enum": ["low", "medium", "high"] },
+              "overall": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+            }
+          },
+          "prerequisites": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "guide": { "type": "string" },
+          "detection_rule_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^(SIGMA|FALCO)-\\d{3}$" }
+          },
+          "references": {
+            "type": "array",
+            "items": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    },
+    "detection_rules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["title", "file"],
+        "properties": {
+          "title": { "type": "string" },
+          "file": { "type": "string" }
+        }
+      }
+    }
+  }
+}

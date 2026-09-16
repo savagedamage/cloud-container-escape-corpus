@@ -1,0 +1,28 @@
+title: eBPF Program Load
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000006
+status: stable
+description: Detects eBPF program loading via bpftool or common bcc tooling from containers — probe injection (CE-006).
+references:
+  - https://docs.kernel.org/bpf/
+author: cloud-container-escape-corpus
+date: 2026-09-16
+tags:
+  - attack.t1556.002
+  - attack.t1040
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_bpftool:
+    Image|endswith: '/bpftool'
+    CommandLine|contains: 'prog'
+  selection_bcc:
+    CommandLine|contains:
+      - 'trace-bpfcc'
+      - 'opensnoop'
+      - 'execsnoop'
+      - 'tcpconnect'
+  condition: selection_bpftool or selection_bcc
+falsepositives:
+  - Legitimate observability tooling (bpftrace, cilium) — exclude known tooling paths
+level: medium

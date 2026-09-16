@@ -1,0 +1,9 @@
+# runc /proc/self/exe overwrite — CE-005 (CVE-2019-5736)
+- rule: runc proc_self_exe Overwrite
+  desc: Detect write opens on /proc/self/exe by runc init processes inside containers.
+  condition: >
+    evt.type in (open, openat, openat2) and evt.is_open_write = true and
+    fd.name = "/proc/self/exe" and container.id != host
+  output: runc binary overwrite attempt (proc=%proc.name container=%container.name)
+  priority: CRITICAL
+  tags: [container, escape, runc, cve-2019-5736, mitre_t1611]

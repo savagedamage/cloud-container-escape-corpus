@@ -1,0 +1,41 @@
+# Privileged escape pod — validates cgroup release_agent, eBPF injection,
+# capability chains, and SYS_ADMIN+/proc combo detection.
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-escape-pod
+  namespace: vulnerable
+spec:
+  hostPID: true
+  containers:
+    - name: escape
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        privileged: true
+        capabilities:
+          add:
+            - SYS_ADMIN
+            - SYS_PTRACE
+            - NET_ADMIN
+            - NET_RAW
+            - BPF
+            - PERFMON
+            - DAC_OVERRIDE
+            - DAC_READ_SEARCH
+            - SETUID
+            - SETGID
+            - SETPCAP
+      volumeMounts:
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: hostproc
+          mountPath: /host/proc
+  volumes:
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+    - name: hostproc
+      hostPath:
+        path: /proc
