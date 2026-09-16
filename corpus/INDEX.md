@@ -13,6 +13,7 @@ equivalent is [`taxonomy.json`](taxonomy/taxonomy.json) + [`index.yaml`](index.y
 | Stand up a lab | [`lab/LAB-SETUP.md`](lab/LAB-SETUP.md) |
 | Browse techniques (CLI) | `escape-corpus techniques` |
 | Browse detection rules (CLI) | `escape-corpus rules` |
+| Browse side-channels (CLI) | `escape-corpus side-channels` |
 
 ## Techniques (CE-001 … CE-010)
 
@@ -53,8 +54,9 @@ Machine-readable contracts for every structured output in [`../schemas/`](../sch
 | File | Purpose |
 |---|---|
 | `taxonomy/taxonomy.json` | Full structured taxonomy: techniques, MITRE mapping, risk, rule links |
+| `side-channels/side-channels.json` | 10 leakage surfaces: paths, syscalls, risk, mitigations, detection |
 | `index.yaml` | Entry points, tool inventory, schema list |
 | `detection/index.yaml` | Rule → technique mapping |
-| `../schemas/*.schema.json` | JSON Schemas (draft 2020-12) for taxonomy and all tool outputs |
+| `../schemas/*.schema.json` | JSON Schemas (draft 2020-12) for taxonomy, side-channels, and all tool outputs |
 
 Run `escape-corpus validate` to cross-check consistency between all of these.

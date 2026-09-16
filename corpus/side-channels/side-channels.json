@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "name": "Container Side-Channel Inventory",
+  "description": "Structured inventory of information leakage paths and boundary violations in container runtimes. Human twin: side-channel-inventory.md.",
+  "surfaces": [
+    {
+      "id": "SC-001",
+      "name": "Shared /proc exposure",
+      "paths": ["/proc/sys/kernel/*", "/proc/<pid>/*", "/proc/self/ns/"],
+      "leakage": "Kernel version, sysctl tunables, host process cmdline/environ/fds/maps, namespace inode numbers",
+      "risk": "Recon for kernel exploit selection; credential theft; namespace escape via setns",
+      "mitigations": ["hidepid=2", "PID namespace isolation", "drop CAP_SYS_PTRACE", "hide /proc/self/ns"],
+      "detection": ["auditd openat on /proc/*/environ", "Falco read_sensitive_file_untrusted"]
+    },
+    {
+      "id": "SC-002",
+      "name": "Shared /sys exposure",
+      "paths": ["/sys/kernel/*", "/sys/fs/cgroup/*", "/sys/bus/*", "/sys/devices/*"],
+      "leakage": "Kernel tunables, security module state, cgroup hierarchy, hardware topology",
+      "risk": "cgroup release_agent escape (CE-001), device passthrough abuse, eBPF surface",
+      "mitigations": ["read-only /sys mounts", "cgroup v2 unified hierarchy", "device cgroup controller"],
+      "detection": ["auditd /sys reads", "Falco cgroup write rules"]
+    },
+    {
+      "id": "SC-003",
+      "name": "cgroup v2 hierarchy analysis",
+      "paths": ["/sys/fs/cgroup/cgroup.controllers", "cgroup.subtree_control", "cgroup.events", "cgroup.procs"],
+      "leakage": "Available controllers, sibling containers, delegated subtrees, frozen state",
+      "risk": "Controller delegation abuse, sibling DoS, resource isolation bypass",
+      "mitigations": ["cgroupns=host only when needed", "restrict subtree delegation"],
+      "detection": ["monitor cgroup.procs writes", "Falco cgroup_notification events"]
+    },
+    {
+      "id": "SC-004",
+      "name": "Namespace boundary analysis",
+      "paths": ["/proc/<pid>/uid_map", "gid_map", "/proc/<pid>/ns/*"],
+      "leakage": "UID/GID maps, namespace membership, host network interfaces and routes",
+      "risk": "nsenter/setns escapes (CE-007, CE-009), network recon, firewall bypass",
+      "mitigations": ["single-entry uid_map", "no nested userns", "CNI-isolated pod networks"],
+      "detection": ["auditd setns/unshare", "FALCO-003 nsenter rule"]
+    },
+    {
+      "id": "SC-005",
+      "name": "Seccomp notch analysis",
+      "syscalls": ["bpf", "pidfd_getfd", "pidfd_open", "userfaultfd", "io_uring_setup", "io_uring_enter", "setns", "clone3", "mount", "ptrace"],
+      "leakage": "Which dangerous syscalls the default profile fails to block",
+      "risk": "eBPF injection (CE-006), fd theft (CE-002), kernel exploits (CE-008)",
+      "mitigations": ["RuntimeDefault + custom deny list", "seccomp notify auditing"],
+      "detection": ["seccomp notification logs", "SIGMA-002/SIGMA-006/SIGMA-011"]
+    },
+    {
+      "id": "SC-006",
+      "name": "Runtime socket exposure",
+      "paths": ["/var/run/docker.sock", "/run/containerd/containerd.sock", "/run/crio/crio.sock", "kubelet read-only port 10255"],
+      "leakage": "Full container lifecycle control, image pull, pod specs",
+      "risk": "Runtime socket abuse (CE-004), lateral movement",
+      "mitigations": ["never mount runtime sockets", "CRI proxy with authz", "disable read-only kubelet port"],
+      "detection": ["socket connection monitoring", "SIGMA-004", "FALCO-004"]
+    },
+    {
+      "id": "SC-007",
+      "name": "Filesystem layer leakage",
+      "paths": ["overlayfs lowerdirs", "/etc/hosts", "/etc/resolv.conf"],
+      "leakage": "Base image layers, hidden files in lower dirs, service discovery",
+      "risk": "Secret extraction from deleted layers, DNS hijacking",
+      "mitigations": ["read-only rootfs", "HostAliases over /etc/hosts writes"],
+      "detection": ["layer-walk tooling (image-diff)", "file integrity monitoring"]
+    },
+    {
+      "id": "SC-008",
+      "name": "Capability effective set leakage",
+      "paths": ["/proc/self/status CapEff/CapPrm/CapInh/CapBnd/CapAmb"],
+      "leakage": "Exact capability sets for chain building",
+      "risk": "Capability-based escape chains (CE-010)",
+      "mitigations": ["drop ALL + minimal adds", "no_new_privs"],
+      "detection": ["runtime-baseline snapshots", "auditd capset"]
+    },
+    {
+      "id": "SC-009",
+      "name": "Time namespace / VDSO leakage",
+      "paths": ["/proc/self/timens_offsets", "clock_gettime", "VDSO mapping"],
+      "leakage": "Host vs container clock drift, TSC access",
+      "risk": "Timing side-channels, TSC-based covert channels",
+      "mitigations": ["time namespace (kernel >= 5.6)", "clocksource isolation"],
+      "detection": ["unusual timens_offsets writes"]
+    },
+    {
+      "id": "SC-010",
+      "name": "Audit & detection matrix",
+      "paths": [],
+      "leakage": "Cross-reference of detection methods for the above surfaces",
+      "risk": "Gaps in detection coverage map to blind spots",
+      "mitigations": [],
+      "detection": ["auditd", "Falco", "Tetragon", "runtime-baseline"]
+    }
+  ]
+}

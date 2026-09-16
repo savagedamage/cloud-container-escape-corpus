@@ -9,6 +9,7 @@ Routes to the three analysis tools and serves the structured knowledge base:
     escape-corpus admit --pod <file> [...]         pod admission security review
     escape-corpus techniques [--id CE-001] [--json]   browse the technique taxonomy
     escape-corpus rules [--technique CE-001] [--json] browse detection rules
+    escape-corpus side-channels [--id SC-001]         browse the side-channel inventory
     escape-corpus schemas                          list output schemas
     escape-corpus validate                         cross-check taxonomy/index/rules/schemas
 
@@ -24,6 +25,7 @@ from . import __version__
 
 CORPUS_ROOT = Path(__file__).resolve().parent.parent
 TAXONOMY_PATH = CORPUS_ROOT / "corpus" / "taxonomy" / "taxonomy.json"
+SIDE_CHANNELS_PATH = CORPUS_ROOT / "corpus" / "side-channels" / "side-channels.json"
 INDEX_PATH = CORPUS_ROOT / "corpus" / "index.yaml"
 DETECTION_INDEX_PATH = CORPUS_ROOT / "corpus" / "detection" / "index.yaml"
 SCHEMAS_DIR = CORPUS_ROOT / "schemas"
@@ -126,6 +128,28 @@ def cmd_rules(args):
             print(f"{r['id']:12s} {r['engine']:7s} {r['title']}")
 
 
+def cmd_side_channels(args):
+    with open(SIDE_CHANNELS_PATH) as f:
+        data = json.load(f)
+    surfaces = data["surfaces"]
+    if args.id:
+        s = next((x for x in surfaces if x["id"] == args.id.upper()), None)
+        if s is None:
+            print(f"Unknown surface id {args.id}. Known: " +
+                  ", ".join(x["id"] for x in surfaces), file=sys.stderr)
+            sys.exit(1)
+        surfaces = [s]
+    if args.json:
+        print(json.dumps(surfaces if not args.id else surfaces[0], indent=2))
+    else:
+        for s in surfaces:
+            print(f"{s['id']}  {s['name']}")
+            print(f"     risk: {s['risk']}")
+            if args.verbose:
+                print(f"     leakage: {s['leakage']}")
+                print(f"     mitigations: {', '.join(s.get('mitigations', []))}")
+
+
 def cmd_schemas(args):
     schemas = sorted(p.name for p in SCHEMAS_DIR.glob("*.schema.json"))
     for s in schemas:
@@ -137,6 +161,7 @@ def cmd_validate(args):
     errors = []
     ids: list = []
     taxonomy: dict = {}
+    sc: dict = {}
 
     # 1. taxonomy.json parses and has the expected shape
     try:
@@ -163,7 +188,17 @@ def cmd_validate(args):
     except Exception as e:
         errors.append(f"index.yaml: {e}")
 
-    # 3. detection index parses and every rule file exists
+    # 3. side-channels.json parses and has valid surface ids
+    try:
+        with open(SIDE_CHANNELS_PATH) as f:
+            sc = json.load(f)
+        sc_ids = [s["id"] for s in sc["surfaces"]]
+        if len(sc_ids) != len(set(sc_ids)):
+            errors.append("side-channels.json: duplicate surface ids")
+    except Exception as e:
+        errors.append(f"side-channels.json: {e}")
+
+    # 4. detection index parses and every rule file exists
     try:
         dindex = _load_yaml(DETECTION_INDEX_PATH)
         for r in dindex.get("rules", []):
@@ -191,10 +226,12 @@ def cmd_validate(args):
         import jsonschema
         schema_map = {
             "taxonomy": "taxonomy.schema.json",
+            "side-channels": "side-channels.schema.json",
         }
+        data_map = {"taxonomy": taxonomy, "side-channels": sc}
         for name, sfile in schema_map.items():
             try:
-                jsonschema.validate(taxonomy, json.loads((SCHEMAS_DIR / sfile).read_text()))
+                jsonschema.validate(data_map[name], json.loads((SCHEMAS_DIR / sfile).read_text()))
             except Exception as e:
                 errors.append(f"{name} vs {sfile}: {e}")
 
@@ -204,6 +241,7 @@ def cmd_validate(args):
             print(f"  - {e}")
         sys.exit(1)
     print(f"OK — {len(ids)} techniques, {len(taxonomy.get('detection_rules', {}))} rule refs, "
+          f"{len(sc.get('surfaces', []))} side-channel surfaces, "
           f"{len(list(SCHEMAS_DIR.glob('*.schema.json')))} schemas, cross-references consistent"
           + (" (jsonschema deep-check)" if have_jsonschema else " (jsonschema not installed; pip install .[dev])"))
 
@@ -248,6 +286,12 @@ def main(argv=None):
     p.add_argument("--technique")
     p.add_argument("--json", action="store_true")
     p.set_defaults(func=cmd_rules)
+
+    p = sub.add_parser("side-channels", help="Browse the side-channel inventory")
+    p.add_argument("--id")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("-v", "--verbose", action="store_true")
+    p.set_defaults(func=cmd_side_channels)
 
     p = sub.add_parser("schemas", help="List output schemas")
     p.set_defaults(func=cmd_schemas)

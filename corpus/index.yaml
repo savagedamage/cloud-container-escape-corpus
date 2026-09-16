@@ -9,6 +9,7 @@ human_entrypoints:
   - corpus/INDEX.md
 machine_entrypoints:
   - corpus/taxonomy/taxonomy.json
+  - corpus/side-channels/side-channels.json
   - corpus/index.yaml
 techniques:
   - CE-001
@@ -36,6 +37,7 @@ tools:
     requires: [pyyaml]
 schemas:
   - schemas/taxonomy.schema.json
+  - schemas/side-channels.schema.json
   - schemas/image-diff.schema.json
   - schemas/baseline-snapshot.schema.json
   - schemas/admission-report.schema.json

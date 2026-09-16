@@ -17,7 +17,7 @@ applied to OCI and Kubernetes.
 | **Taxonomy** | 10 container escape techniques, risk-scored, MITRE-mapped | [corpus/taxonomy/](corpus/taxonomy/) + `taxonomy.json` (machine) |
 | **Playbooks** | Per-technique: prerequisites, attack path, PoC sketch, detection, mitigation | [corpus/techniques/](corpus/techniques/) |
 | **Detection rules** | 11 Sigma + 8 Falco rules, indexed to techniques | [corpus/detection/](corpus/detection/) |
-| **Side-channels** | /proc, /sys, cgroup v2, namespace, seccomp-notch leakage map | [corpus/side-channels/](corpus/side-channels/) |
+| **Side-channels** | 10 leakage surfaces (/proc, /sys, cgroup, ns, seccomp, sockets, layers, caps, time) | [corpus/side-channels/](corpus/side-channels/) + `side-channels.json` (machine) |
 | **Lab** | kind cluster setup, vulnerable pod matrix, validation plan | [corpus/lab/](corpus/lab/) |
 | **Tools** | image-diff, runtime-baseline, admission-review | pip-installable package |
 | **Schemas** | JSON Schemas for taxonomy and every tool output | [schemas/](schemas/) |

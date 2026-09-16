@@ -14,20 +14,23 @@ All notable changes to the Cloud/Container Escape Corpus.
 - **Detection content**: 11 Sigma rules + 8 Falco rules with a machine-readable
   rule→technique index (`corpus/detection/`)
 - **Side-channel inventory**: /proc, /sys, cgroup v2, namespace, and
-  seccomp-notch leakage map (`corpus/side-channels/`)
+  seccomp-notch leakage map in human (`side-channel-inventory.md`) and machine
+  (`side-channels.json`, SC-001…SC-010) form with JSON Schema
 - **Tools** (pip-installable `escape_corpus` package):
   - `image-diff` — risk-weighted OCI image tag delta (hardlink-aware,
     preserves setuid + file-capability signals)
   - `runtime-baseline` — hash-chained runtime drift baseline/verify/monitor
   - `admission-review` — 40+ pod security checks + simplified
     Kyverno/OPA-style custom policies
-  - `escape-corpus` — unified CLI with `techniques`, `rules`, `schemas`,
-    `validate` subcommands
-- **JSON Schemas** (draft 2020-12) for taxonomy and all tool outputs
-  (`schemas/`)
+  - `escape-corpus` — unified CLI with `techniques`, `rules`, `side-channels`,
+    `schemas`, `validate` subcommands
+- **JSON Schemas** (draft 2020-12) for taxonomy, side-channels, and all tool
+  outputs (`schemas/`)
 - **Lab**: kind-based setup guide with vulnerable pod matrix
   (`corpus/lab/`)
-- **Tests**: 6/6 passing unit suite; CI workflow
+- **Tests**: 6/6 passing unit suite; CI with a `live-tools` job that runs
+  `runtime-baseline` against real Docker containers and asserts admission
+  review outcomes on runners
 
 ### Verified
 

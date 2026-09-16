@@ -29,4 +29,35 @@ jobs:
           escape-corpus --version
           escape-corpus techniques --id CE-001 | head -3
           escape-corpus rules --technique CE-007 | head -3
+          escape-corpus side-channels --id SC-001 | head -2
           escape-corpus schemas
+
+  live-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install .
+      - name: Runtime baseline against a real container
+        run: |
+          docker run -d --name drift-smoke nginx:alpine
+          docker run -d --name drift-smoke-ptrace --cap-add SYS_PTRACE nginx:alpine
+          sleep 10
+          runtime-baseline baseline --container drift-smoke --runtime docker --output /tmp/baseline.json
+          runtime-baseline verify --container drift-smoke --baseline /tmp/baseline.json --runtime docker
+          echo "--- cross-container verify (expect CRITICAL capabilities) ---"
+          runtime-baseline verify --container drift-smoke-ptrace --baseline /tmp/baseline.json --runtime docker || true
+      - name: Admission review on fixtures
+        run: |
+          admission-review --pod tests/escape-test-pod.yaml --json > /tmp/escape.json
+          admission-review --pod tests/secure-test-pod.yaml --json > /tmp/secure.json
+          python3 -c "
+          import json
+          e = json.load(open('/tmp/escape.json')); s = json.load(open('/tmp/secure.json'))
+          assert e['risk_level'] == 'CRITICAL', e['risk_level']
+          assert s['risk_level'] != 'CRITICAL', s['risk_level']
+          print('admission review live-path OK')
+          "
