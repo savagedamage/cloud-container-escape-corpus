@@ -40,5 +40,19 @@ admission-review = "escape_corpus.admission_review:main"
 [tool.setuptools]
 packages = ["escape_corpus"]
 
+[tool.setuptools.data-files]
+"share/escape-corpus/corpus" = [
+  "corpus/index.yaml",
+  "corpus/INDEX.md",
+]
+"share/escape-corpus/corpus/taxonomy" = ["corpus/taxonomy/*"]
+"share/escape-corpus/corpus/techniques" = ["corpus/techniques/*"]
+"share/escape-corpus/corpus/side-channels" = ["corpus/side-channels/*"]
+"share/escape-corpus/corpus/lab" = ["corpus/lab/*"]
+"share/escape-corpus/corpus/detection" = ["corpus/detection/index.yaml"]
+"share/escape-corpus/corpus/detection/sigma" = ["corpus/detection/sigma/*"]
+"share/escape-corpus/corpus/detection/falco" = ["corpus/detection/falco/*"]
+"share/escape-corpus/schemas" = ["schemas/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

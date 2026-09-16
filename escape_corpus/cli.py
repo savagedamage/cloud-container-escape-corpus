@@ -23,7 +23,28 @@ from pathlib import Path
 
 from . import __version__
 
-CORPUS_ROOT = Path(__file__).resolve().parent.parent
+
+def _find_corpus_root() -> Path:
+    """Locate the corpus data files.
+
+    Resolution order:
+    1. Source checkout / editable install: the repo root above this package
+       (package parent contains corpus/ and pyproject.toml)
+    2. Installed package: data files shipped to <sys.prefix>/share/escape-corpus
+       via [tool.setuptools.data-files]
+    """
+    dev = Path(__file__).resolve().parent.parent
+    if (dev / "corpus" / "taxonomy" / "taxonomy.json").exists():
+        return dev
+    installed = Path(sys.prefix) / "share" / "escape-corpus"
+    if (installed / "corpus" / "taxonomy" / "taxonomy.json").exists():
+        return installed
+    raise FileNotFoundError(
+        "corpus data files not found — install with `pip install .` or run from the repo root"
+    )
+
+
+CORPUS_ROOT = _find_corpus_root()
 TAXONOMY_PATH = CORPUS_ROOT / "corpus" / "taxonomy" / "taxonomy.json"
 SIDE_CHANNELS_PATH = CORPUS_ROOT / "corpus" / "side-channels" / "side-channels.json"
 INDEX_PATH = CORPUS_ROOT / "corpus" / "index.yaml"
