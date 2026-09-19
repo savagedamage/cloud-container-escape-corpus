@@ -276,21 +276,28 @@ class TestPullGuard:
 class TestMainEntryPoint:
     """The CLI path users actually run, driven without touching a registry."""
 
-    def _wire(self, monkeypatch, tmp_path, old_layers, new_layers, old_cfg, new_cfg):
+    def _wire(self, monkeypatch, tmp_path, old_layers, new_layers, old_cfg, new_cfg,
+              old_arch="amd64", new_arch="amd64"):
         import escape_corpus.image_diff as m
 
         old_tar = build_image_tar(tmp_path / "old.tar", old_layers, config=old_cfg)
         new_tar = build_image_tar(tmp_path / "new.tar", new_layers, config=new_cfg)
         tars = {"old:1": old_tar, "new:2": new_tar}
+        calls = {"platforms": []}
 
-        def fake_pull(image, dest):
+        def fake_pull(image, dest, platform=None):
+            calls["platforms"].append(platform)
             dest.write_bytes(tars[image].read_bytes())
 
-        def fake_config(image):
-            return {"config": old_cfg["config"] if image == "old:1" else new_cfg["config"]}
+        def fake_config(image, platform=None):
+            calls["platforms"].append(platform)
+            return {"config": old_cfg["config"] if image == "old:1" else new_cfg["config"],
+                    "architecture": old_arch if image == "old:1" else new_arch,
+                    "os": "linux"}
 
         monkeypatch.setattr(m, "pull_image_tar", fake_pull)
         monkeypatch.setattr(m, "get_image_config", fake_config)
+        return calls
 
     def test_reports_and_writes_json(self, monkeypatch, tmp_path, capsys):
         self._wire(
@@ -317,3 +324,139 @@ class TestMainEntryPoint:
         assert doc["env_changes"]["TOKEN"] == [None, "zzz"]
         assert doc["total_risk_score"] > 0
         assert "/bin/suid" in doc["new_binaries"]
+
+    def test_platform_flag_reaches_every_registry_call(self, monkeypatch, tmp_path):
+        """A platform must be passed to BOTH pulls and BOTH config lookups —
+        crane resolves to the host arch otherwise, silently diffing the wrong
+        variant of a multi-arch image."""
+        calls = self._wire(
+            monkeypatch, tmp_path,
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            {"config": {"Cmd": ["/bin/sh"]}},
+            {"config": {"Cmd": ["/bin/sh"]}},
+        )
+        import sys
+        monkeypatch.setattr(sys, "argv",
+                            ["image-diff", "old:1", "new:2", "--platform", "linux/arm64"])
+        import escape_corpus.image_diff as m
+        m.main()
+        assert calls["platforms"] == ["linux/arm64"] * 4, calls["platforms"]
+
+    def test_architecture_mismatch_is_flagged_and_weighted(self, monkeypatch, tmp_path, capsys):
+        """Comparing an amd64 image to an arm64 one is not a small delta, it is a
+        meaningless one: every binary differs. It must be called out and scored."""
+        import sys
+
+        from escape_corpus.image_diff import RISK_WEIGHTS
+
+        self._wire(
+            monkeypatch, tmp_path,
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            {"config": {"Cmd": ["/bin/sh"]}},
+            {"config": {"Cmd": ["/bin/sh"]}},
+            old_arch="amd64", new_arch="arm64",
+        )
+        out = tmp_path / "diff.json"
+        monkeypatch.setattr(sys, "argv",
+                            ["image-diff", "old:1", "new:2", "-o", str(out)])
+        import escape_corpus.image_diff as m
+        m.main()
+
+        text = capsys.readouterr().out
+        assert "architecture mismatch" in text and "MISMATCH" in text
+        doc = json.loads(out.read_text())
+        assert doc["architecture_mismatch"] is True
+        assert (doc["architecture_old"], doc["architecture_new"]) == ("amd64", "arm64")
+        assert doc["total_risk_score"] >= RISK_WEIGHTS["architecture_mismatch"]
+
+    def test_matching_architectures_are_not_flagged(self, monkeypatch, tmp_path):
+        import sys
+        self._wire(
+            monkeypatch, tmp_path,
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            {"config": {"Cmd": ["/bin/sh"]}},
+            {"config": {"Cmd": ["/bin/sh"]}},
+        )
+        out = tmp_path / "diff.json"
+        monkeypatch.setattr(sys, "argv",
+                            ["image-diff", "old:1", "new:2", "-o", str(out)])
+        import escape_corpus.image_diff as m
+        m.main()
+        assert json.loads(out.read_text())["architecture_mismatch"] is False
+
+    def test_per_image_platforms_are_used_independently(self, monkeypatch, tmp_path):
+        """--platform-old/--platform-new enable a platform migration audit: the two
+        images are pulled at DIFFERENT platforms on purpose."""
+        calls = self._wire(
+            monkeypatch, tmp_path,
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            {"config": {"Cmd": ["/bin/sh"]}},
+            {"config": {"Cmd": ["/bin/sh"]}},
+        )
+        import sys
+        monkeypatch.setattr(sys, "argv", [
+            "image-diff", "old:1", "new:2",
+            "--platform-old", "linux/amd64", "--platform-new", "linux/arm64",
+        ])
+        import escape_corpus.image_diff as m
+        m.main()
+        # two pulls then two config lookups, in order: old,new,old,new
+        assert calls["platforms"] == ["linux/amd64", "linux/arm64"] * 2
+
+    def test_requested_migration_is_not_scored_as_risk(self, monkeypatch, tmp_path, capsys):
+        """A deliberate amd64 -> arm64 audit must not be punished with the
+        accidental-mismatch weight; it is the point of the run."""
+        import sys
+
+        from escape_corpus.image_diff import RISK_WEIGHTS
+
+        self._wire(
+            monkeypatch, tmp_path,
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            [{"files": {"/bin/app": (ELF, 0o755)}}],
+            {"config": {"Cmd": ["/bin/sh"]}},
+            {"config": {"Cmd": ["/bin/sh"]}},
+            old_arch="amd64", new_arch="arm64",
+        )
+        out = tmp_path / "diff.json"
+        monkeypatch.setattr(sys, "argv", [
+            "image-diff", "old:1", "new:2", "-o", str(out),
+            "--platform-old", "linux/amd64", "--platform-new", "linux/arm64",
+        ])
+        import escape_corpus.image_diff as m
+        m.main()
+
+        text = capsys.readouterr().out
+        assert "migration" in text and "architecture mismatch" not in text
+        doc = json.loads(out.read_text())
+        assert doc["architecture_mismatch"] is True
+        assert doc["intentional_architecture_change"] is True
+        # identical file contents -> no per-file risk, and no mismatch penalty
+        assert doc["total_risk_score"] < RISK_WEIGHTS["architecture_mismatch"]
+
+    def test_pull_error_surfaces_the_registry_message(self, monkeypatch, tmp_path):
+        """A bare 'failed to pull' hides the actionable part of the registry error."""
+        import escape_corpus.image_diff as m
+
+        monkeypatch.setattr(m, "CRANE", "/bin/false")
+        monkeypatch.setattr(m, "SKOPEO", "")
+        monkeypatch.setattr(m, "run_cmd", lambda cmd, timeout=300: (
+            1, "", "Error: fetching config: no child with platform linux/amd64 in index"))
+        with pytest.raises(RuntimeError) as excinfo:
+            m.pull_image_tar("arm64v8/busybox:1.36", tmp_path / "x.tar")
+        message = str(excinfo.value)
+        assert "no child with platform" in message
+        assert "--platform" in message, "the error should say how to fix it"
+
+    def test_config_error_surfaces_the_registry_message(self, monkeypatch, tmp_path):
+        import escape_corpus.image_diff as m
+
+        monkeypatch.setattr(m, "CRANE", "/bin/false")
+        monkeypatch.setattr(m, "SKOPEO", "")
+        monkeypatch.setattr(m, "run_cmd", lambda cmd, timeout=300: (1, "", "manifest unknown"))
+        with pytest.raises(RuntimeError, match="manifest unknown"):
+            m.get_image_config("nope:404")

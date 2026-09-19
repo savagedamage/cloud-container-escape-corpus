@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "escape-corpus"
-version = "1.1.0"
+version = "1.2.0"
 description = "Container escape research corpus: OCI image diffing, runtime drift baselining, and pod admission review"
 readme = "README.md"
 license = { text = "MIT" }

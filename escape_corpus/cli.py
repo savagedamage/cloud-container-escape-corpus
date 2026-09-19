@@ -69,6 +69,12 @@ def cmd_image_diff(args):
         argv += ["-o", args.output]
     if args.verbose:
         argv += ["-v"]
+    if getattr(args, "platform", None):
+        argv += ["--platform", args.platform]
+    if getattr(args, "platform_old", None):
+        argv += ["--platform-old", args.platform_old]
+    if getattr(args, "platform_new", None):
+        argv += ["--platform-new", args.platform_new]
     _delegate(image_diff.main, argv)
 
 
@@ -280,6 +286,13 @@ def main(argv=None):
     p.add_argument("new_image")
     p.add_argument("-o", "--output")
     p.add_argument("-v", "--verbose", action="store_true")
+    p.add_argument("--platform", metavar="OS/ARCH[/VARIANT]",
+                   help="compare a specific platform (default: the HOST architecture, "
+                        "which is often not what the target cluster runs)")
+    p.add_argument("--platform-old", metavar="OS/ARCH[/VARIANT]",
+                   help="platform for the old image only (migration audit)")
+    p.add_argument("--platform-new", metavar="OS/ARCH[/VARIANT]",
+                   help="platform for the new image only")
     p.set_defaults(func=cmd_image_diff)
 
     p = sub.add_parser("baseline", help="Runtime drift baseline/verify/monitor")

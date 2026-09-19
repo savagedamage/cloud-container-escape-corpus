@@ -189,7 +189,14 @@ class RuntimeBaseline:
         )
 
     def snapshot_cgroups(self) -> CgroupSnapshot:
-        """Capture cgroup state."""
+        """Capture cgroup state (v1 and v2 host layouts).
+
+        v1 was previously detected but not actually read — the code looked only at
+        the v2 file names, which do not exist on a v1 host, so a v1 container
+        reported `cgroup_version: v1` with every limit None. Resource-limit drift
+        was therefore invisible on v1 hosts (RHEL/CentOS 7-era nodes, older
+        clusters). Both layouts are now read into the same shape.
+        """
         cgroup_path = self._read_file_in_container("/proc/self/cgroup") or ""
 
         cgroup_version = "v1"
@@ -200,12 +207,39 @@ class RuntimeBaseline:
         controllers_file = self._read_file_in_container("/sys/fs/cgroup/cgroup.controllers")
         if controllers_file:
             controllers = controllers_file.split()
+        elif cgroup_version == "v1":
+            # v1: /proc/self/cgroup is "N:controller[,controller]:/path" per line
+            for line in cgroup_path.split("\n"):
+                parts = line.split(":")
+                if len(parts) >= 2 and parts[1]:
+                    for controller in parts[1].split(","):
+                        if controller and controller not in controllers:
+                            controllers.append(controller)
 
         cpu_limit = self._read_file_in_container("/sys/fs/cgroup/cpu.max")
         memory_limit = self._read_file_in_container("/sys/fs/cgroup/memory.max")
         pids_limit = self._read_file_in_container("/sys/fs/cgroup/pids.max")
 
+        if cgroup_version == "v1":
+            if not cpu_limit:
+                quota = (self._read_file_in_container(
+                    "/sys/fs/cgroup/cpu/cpu.cfs_quota_us") or "").strip()
+                period = (self._read_file_in_container(
+                    "/sys/fs/cgroup/cpu/cpu.cfs_period_us") or "").strip()
+                # -1 quota means "no limit" in v1; express it the way v2 does so a
+                # v1/v2 drift comparison stays meaningful.
+                if quota and period:
+                    cpu_limit = "max" if quota == "-1" else f"{quota} {period}"
+            if not memory_limit:
+                memory_limit = (self._read_file_in_container(
+                    "/sys/fs/cgroup/memory/memory.limit_in_bytes") or "").strip() or None
+            if not pids_limit:
+                pids_limit = (self._read_file_in_container(
+                    "/sys/fs/cgroup/pids/pids.max") or "").strip() or None
+
         cgroup_procs = self._read_file_in_container("/sys/fs/cgroup/cgroup.procs")
+        if not cgroup_procs and cgroup_version == "v1":
+            cgroup_procs = self._read_file_in_container("/sys/fs/cgroup/pids/cgroup.procs")
         procs_count = len(cgroup_procs.split("\n")) if cgroup_procs else 0
 
         return CgroupSnapshot(
@@ -389,6 +423,26 @@ class RuntimeBaseline:
         return snapshot
 
 
+def _describe_direction(old: Optional[str], new: Optional[str]) -> str:
+    """Return ' raised' / ' lowered' when the values are numerically comparable.
+
+    Best-effort on purpose: cpu limits are either "max" or "<quota> <period>", so
+    only the comparable cases get a direction and the rest just say "changed".
+    """
+    def as_int(value: Optional[str]) -> Optional[int]:
+        if not value:
+            return None
+        try:
+            return int(value.split()[0])
+        except (ValueError, IndexError):
+            return None
+
+    old_i, new_i = as_int(old), as_int(new)
+    if old_i is not None and new_i is not None:
+        return " raised" if new_i > old_i else " lowered"
+    return " changed"
+
+
 class DriftDetector:
     """Detect drift between baseline and current snapshot."""
 
@@ -451,6 +505,35 @@ class DriftDetector:
                 "category": "cgroup",
                 "description": f"Cgroup version changed: {b_cg.cgroup_version} -> {c_cg.cgroup_version}",
                 "remediation": "Cgroup hierarchy change indicates runtime modification"
+            })
+
+        # Resource limits were previously NOT compared at all: raising memory/CPU/PID
+        # limits on a running container (a real escape-adjacent change — pids.max
+        # enables fork bombs, memory/CPU raises enable resource exhaustion) went
+        # undetected on both cgroup generations.
+        for label, attr in (("Memory limit", "memory_limit"),
+                            ("CPU limit", "cpu_limit"),
+                            ("PID limit", "pids_limit")):
+            old_val = getattr(b_cg, attr)
+            new_val = getattr(c_cg, attr)
+            if old_val == new_val:
+                continue
+            findings.append({
+                "level": "HIGH",
+                "category": "cgroup",
+                "description": f"{label}{_describe_direction(old_val, new_val)}: "
+                               f"{old_val or 'unset'} -> {new_val or 'unset'}",
+                "remediation": "Confirm the resource policy change was intended; a relaxed "
+                               "limit widens a denial-of-service surface"
+            })
+
+        if b_cg.controllers != c_cg.controllers:
+            findings.append({
+                "level": "MEDIUM",
+                "category": "cgroup",
+                "description": f"Cgroup controllers changed: {b_cg.controllers} -> {c_cg.controllers}",
+                "remediation": "A new controller (e.g. pids, memory) exposes additional "
+                               "cgroup interfaces to the container"
             })
 
         b_ns = self.baseline.namespaces

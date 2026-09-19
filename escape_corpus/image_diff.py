@@ -62,12 +62,24 @@ class ImageDiffResult:
     # images carry a package database this tool does not parse.
     packages: Dict = field(default_factory=dict)
     package_format: Optional[str] = None
+    # Architecture the comparison actually ran against. crane resolves to the
+    # HOST platform unless told otherwise, so this is recorded rather than assumed.
+    platform: Optional[str] = None
+    platform_old: Optional[str] = None
+    platform_new: Optional[str] = None
+    architecture_old: Optional[str] = None
+    architecture_new: Optional[str] = None
+    architecture_mismatch: bool = False
+    intentional_architecture_change: bool = False
 
 
 RISK_WEIGHTS = {
     "new_binary": 25,
     "new_setuid_binary": 40,
     "new_capability_binary": 35,
+    # A cross-architecture comparison is not a smaller delta, it is a meaningless
+    # one: every binary differs. Weighted high so it cannot be read as routine.
+    "architecture_mismatch": 50,
     "entrypoint_change": 30,
     "cmd_change": 15,
     "user_change": 10,
@@ -128,36 +140,62 @@ def run_cmd(cmd: List[str], timeout: int = 300) -> Tuple[int, str, str]:
         return -1, "", str(e)
 
 
-def get_image_config(image: str) -> dict:
-    """Resolve multi-arch automatically and return the image config JSON."""
+def get_image_config(image: str, platform: Optional[str] = None) -> dict:
+    """Resolve the image config JSON.
+
+    `platform` (os/arch[/variant]) selects a variant of a multi-arch image. It is
+    NOT optional in spirit: crane resolves to the HOST architecture by default, so
+    without this the tool diffs whatever the analyst happens to be sitting on —
+    wrong for an arm64 cluster being triaged from an amd64 laptop.
+    """
+    plat = ["--platform", platform] if platform else []
+    err = out = ""
     if CRANE:
-        code, out, err = run_cmd([CRANE, "config", image])
+        code, out, err = run_cmd([CRANE, "config", *plat, image])
         if code == 0 and out.strip():
             try:
                 return json.loads(out)
             except json.JSONDecodeError:
                 pass
     if SKOPEO:
-        code, out, err = run_cmd([SKOPEO, "inspect", f"docker://{image}"])
+        code, out, err = run_cmd([SKOPEO, "inspect", *(["--override-os", platform.split("/")[0]] if platform else []),
+                                 f"docker://{image}"])
         if code == 0 and out.strip():
             return json.loads(out)
-    raise RuntimeError(f"Failed to get config for {image} (crane={CRANE or 'missing'}, skopeo={SKOPEO or 'missing'})")
+    detail = (err or out or "").strip().splitlines()
+    raise RuntimeError(f"Failed to get config for {image} (crane={CRANE or 'missing'}, "
+                       f"skopeo={SKOPEO or 'missing'})"
+                       + (f": {detail[-1]}" if detail else ""))
 
 
-def pull_image_tar(image: str, dest_tar: Path) -> None:
-    """Pull image to a local tar archive via crane or skopeo."""
+def pull_image_tar(image: str, dest_tar: Path, platform: Optional[str] = None) -> None:
+    """Pull image to a local tar archive via crane or skopeo (see get_image_config)."""
+    plat = ["--platform", platform] if platform else []
+    err = out = ""
     if CRANE:
-        code, out, err = run_cmd([CRANE, "pull", image, str(dest_tar)])
+        code, out, err = run_cmd([CRANE, "pull", *plat, image, str(dest_tar)])
         if code == 0:
             return
     if SKOPEO:
-        code, out, err = run_cmd([SKOPEO, "copy", f"docker://{image}", f"docker-archive:{dest_tar}"])
+        sk_opts = ["--override-arch", platform.split("/")[1]] if platform and "/" in platform else []
+        code, out, err = run_cmd([SKOPEO, "copy", *sk_opts, f"docker://{image}", f"docker-archive:{dest_tar}"])
         if code == 0:
             return
-    raise RuntimeError(f"Failed to pull {image}")
+    # The registry tool's own message is the useful one — "no child with platform
+    # linux/amd64 in index ..." tells the operator exactly what to do — and it was
+    # being discarded in favour of a bare "failed to pull".
+    detail = (err or out or "").strip().splitlines()
+    hint = ""
+    if "no child with platform" in (err or ""):
+        hint = ("\n      This image has no variant for the resolved platform. Pass "
+                "--platform (or --platform-old/--platform-new) to select one.")
+    raise RuntimeError(f"Failed to pull {image}"
+                       + (f": {detail[-1]}" if detail else "")
+                       + hint)
 
 
-def safe_extract_layer(lt: tarfile.TarFile, dest: Path) -> Dict[str, str]:
+def safe_extract_layer(lt: tarfile.TarFile, dest: Path,
+                       modes: Optional[Dict[str, int]] = None) -> Dict[str, str]:
     """Extract one layer tar member-by-member with containment checks, preserving
     symlinks (incl. absolute targets, never followed), hardlinks, mode bits
     (incl. setuid) and file-capability xattrs. Returns hardlink map rel->target."""
@@ -192,14 +230,22 @@ def safe_extract_layer(lt: tarfile.TarFile, dest: Path) -> Dict[str, str]:
                 if src:
                     with open(target, "wb") as f:
                         shutil.copyfileobj(src, f)
-                os.chmod(target, m.mode)
+                os.chmod(target, m.mode | 0o600)
+                if modes is not None:
+                    modes["/" + name] = m.mode
         elif m.isfile():
             os.makedirs(parent, exist_ok=True)
             src = lt.extractfile(m)
             if src:
                 with open(target, "wb") as f:
                     shutil.copyfileobj(src, f)
-            os.chmod(target, m.mode)  # preserve setuid/setgid/sticky
+            # Keep the on-disk copy readable by us: RHEL images contain mode-0000
+            # files (/etc/shadow-, /etc/gshadow-) and the merge step must be able to
+            # read them back. The AUTHORITATIVE mode is the tar member's, recorded
+            # in `modes` — the setuid/setgid signal lives there, not in lstat.
+            os.chmod(target, m.mode | 0o600)
+            if modes is not None:
+                modes["/" + name] = m.mode
             cap_hex = m.pax_headers.get("SCHILY.xattr.security.capability")
             if cap_hex:
                 try:
@@ -233,6 +279,7 @@ def flatten_image_tar(tar_path: Path, workdir: Path) -> Tuple[Dict[str, dict], L
 
         merge_dir = workdir / "merge"
         merge_dir.mkdir(parents=True, exist_ok=True)
+        layer_modes: Dict[str, int] = {}
 
         for i, layer_name in enumerate(layer_names):
             layer_dir = workdir / f"layer_{i}"
@@ -243,7 +290,7 @@ def flatten_image_tar(tar_path: Path, workdir: Path) -> Tuple[Dict[str, dict], L
                 continue  # layer blob not present (e.g. foreign layer)
             fobj = tf.extractfile(member)
             with tarfile.open(fileobj=fobj, mode="r:gz") as lt:
-                hardlinks.update(safe_extract_layer(lt, layer_dir))
+                hardlinks.update(safe_extract_layer(lt, layer_dir, layer_modes))
 
         # Merge in order: later layers overwrite earlier ones
         for i in range(len(layer_names)):
@@ -296,7 +343,9 @@ def flatten_image_tar(tar_path: Path, workdir: Path) -> Tuple[Dict[str, dict], L
                     "type": "file",
                     "sha256": get_file_sha256(p),
                     "size": st.st_size,
-                    "mode": st.st_mode,
+                    # tar member mode is authoritative; lstat is only a fallback
+                    # (and would under-report after the readable-mode fix above)
+                    "mode": layer_modes.get(rel, st.st_mode),
                 }
 
     return flat, layer_names, merge_dir
@@ -503,22 +552,51 @@ def main():
     parser.add_argument("new_image", help="New image reference (e.g., nginx:1.24)")
     parser.add_argument("-o", "--output", help="Output JSON file")
     parser.add_argument("-v", "--verbose", action="store_true", help="Print every risky file change")
+    parser.add_argument("--platform", metavar="OS/ARCH[/VARIANT]",
+                        help="Image platform to compare, e.g. linux/arm64. Applies to both "
+                             "images. Default: the host architecture, which is usually NOT "
+                             "what the target cluster runs.")
+    parser.add_argument("--platform-old", metavar="OS/ARCH[/VARIANT]",
+                        help="Platform for the OLD image only (overrides --platform). Use with "
+                             "--platform-new to audit a platform migration.")
+    parser.add_argument("--platform-new", metavar="OS/ARCH[/VARIANT]",
+                        help="Platform for the NEW image only (overrides --platform).")
     args = parser.parse_args()
+
+    # An architecture difference is either an accident or a deliberate migration
+    # audit. Only the accidental case is scored as risk.
+    plat_old = args.platform_old or args.platform
+    plat_new = args.platform_new or args.platform
+    intentional_arch_change = bool(args.platform_old or args.platform_new)
 
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp = Path(tmpdir)
 
         print(f"[*] Pulling {args.old_image} ...")
         old_tar = tmp / "old.tar"
-        pull_image_tar(args.old_image, old_tar)
+        pull_image_tar(args.old_image, old_tar, plat_old)
 
         print(f"[*] Pulling {args.new_image} ...")
         new_tar = tmp / "new.tar"
-        pull_image_tar(args.new_image, new_tar)
+        pull_image_tar(args.new_image, new_tar, plat_new)
 
         print("[*] Getting image configs ...")
-        config_old = get_image_config(args.old_image)
-        config_new = get_image_config(args.new_image)
+        config_old = get_image_config(args.old_image, plat_old)
+        config_new = get_image_config(args.new_image, plat_new)
+
+        arch_old = config_old.get("architecture")
+        arch_new = config_new.get("architecture")
+        arch_mismatch = bool(arch_old and arch_new and arch_old != arch_new)
+        accidental_mismatch = arch_mismatch and not intentional_arch_change
+        if accidental_mismatch:
+            print(f"    !! architecture mismatch: {args.old_image} is {arch_old}, "
+                  f"{args.new_image} is {arch_new} — every binary will differ")
+            print("       If accidental, pin --platform. If you are auditing a platform "
+                  "migration, say so with --platform-old/--platform-new.")
+        elif arch_mismatch:
+            print(f"    platform migration {arch_old} -> {arch_new} (requested)")
+        print(f"    platform: {plat_old or 'host default'} -> {plat_new or 'host default'} "
+              f"({arch_old} -> {arch_new})")
 
         print("[*] Flattening old image ...")
         old_flat, old_layers, old_merge_dir = flatten_image_tar(old_tar, tmp / "old")
@@ -547,6 +625,8 @@ def main():
         entrypoint_changed, cmd_changed, user_changed, env_changes = diff_configs(config_old, config_new)
 
         risk_score = sum(c.risk_score for c in changes)
+        if accidental_mismatch:
+            risk_score += RISK_WEIGHTS["architecture_mismatch"]
         if entrypoint_changed:
             risk_score += RISK_WEIGHTS["entrypoint_change"]
         if cmd_changed:
@@ -579,6 +659,13 @@ def main():
             risk_level=compute_risk_level(risk_score),
             packages=pkg_delta,
             package_format=pkg_fmt,
+            platform=args.platform,
+            platform_old=plat_old,
+            platform_new=plat_new,
+            architecture_old=arch_old,
+            architecture_new=arch_new,
+            architecture_mismatch=arch_mismatch,
+            intentional_architecture_change=intentional_arch_change,
         )
 
         output = asdict(result)
@@ -589,6 +676,10 @@ def main():
 
         print("\n=== Image Diff Report ===")
         print(f"{args.old_image} -> {args.new_image}")
+        print(f"Platform: {plat_old or 'host default'} -> {plat_new or 'host default'} "
+              f"({arch_old} -> {arch_new})"
+              + ("  ** MISMATCH - delta is not meaningful **" if accidental_mismatch
+                 else "  (requested migration)" if arch_mismatch else ""))
         print(f"Files: +{files_added} -{files_removed} ~{files_modified}")
         print(f"New binaries: {len(new_binaries)} | New file capabilities: {len(new_capabilities)}")
         print(f"Entrypoint changed: {entrypoint_changed} | Cmd changed: {cmd_changed} | User changed: {user_changed}")

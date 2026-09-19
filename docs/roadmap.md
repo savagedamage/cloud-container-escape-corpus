@@ -46,10 +46,11 @@ manifest, `image-diff` pulls and flattens images, `runtime-baseline` reads
 
 | Limitation | Impact | Status |
 |---|---|---|
-| RPM-based images (`rpmdb.sqlite`/BDB) are not parsed | `image-diff` reports the package inventory as *unavailable* for RHEL/CentOS-family images instead of an empty delta | Open — needs an sqlite/rpm binding; the honest "unavailable" path is tested |
+| Legacy Berkeley-DB rpmdb (RPM < 4.16, e.g. CentOS 7) is not parsed | `image-diff` reports the inventory as *unavailable* for those images rather than an empty delta | Accepted — needs a Berkeley DB binding. `rpmdb.sqlite` (RHEL 8+) IS parsed, verified 118/118 against rockylinux:9-minimal |
 | Package delta reports *what* changed, not *whether it fixes a CVE* | Correlating `libssl3 → 3.0.13` with a CVE requires a vulnerability database (OSV/Grype data) | Open — deliberately not faked; see below |
 | Falco rules are schema-validated, not engine-executed | CI cannot run `falco` (no binary), so a rule that parses but never fires would not be caught | Accepted — Sigma rules ARE engine-validated via `sigma check`; Falco conditions use the same field vocabulary as the validated set |
 | CE-003 and CE-008 have no Falco rule | RBAC and kernel-syscall exploitation are not observable as container runtime events | Documented in the detection coverage table as a gap by design |
+| No CI job applies the lab manifests to a cluster | CI analyses every manifest with `admission-review` but never `kubectl apply`s it, so an apply-time schema problem would not be caught | Open — needs a kind-based CI job; the equivalent is a documented local run (`corpus/lab/up.sh --yes` then `corpus/lab/verify.sh`) |
 | Windows containers | No coverage at all | Open — see above |
 
 ### Why no CVE correlation in the package delta
@@ -65,10 +66,11 @@ bundled snapshot of unknown age.
 ## Planned work
 
 - **Admission benchmark against Kubernetes Goat**: a second, differently-authored
-  adversarial corpus to complement the BadPods recall result (BadPods is
-  maximally hostile; a second corpus would stress precision).
+  adversarial corpus to complement the BadPods recall result (BadPods is maximally
+  hostile). Precision is now covered by the PSS-restricted compliance corpus in
+  `tests/test_precision.py`; a second adversarial corpus would add recall breadth.
 - **CE-011/CE-012 cloud techniques**: instance-metadata and workload-identity
   token theft, closing the "Cloud/" half of the repo name.
-- **Runtime baseline: cgroup v1 fixtures**: the current snapshot logic is
-  exercised against cgroup v2 shapes; v1 hosts (`/sys/fs/cgroup/memory/...`) are
-  parsed but not yet covered by tests.
+- **Kind-based CI job**: apply the lab manifests in CI (they are currently only
+  analysed, never applied).
+- **RPM Berkeley-DB (CentOS 7) inventory**: the last unparsed package database.

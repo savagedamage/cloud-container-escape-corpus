@@ -723,7 +723,14 @@ class AdmissionReviewer:
         return current
 
     def generate_report(self, pod: dict, policy_findings: List[Finding]) -> AdmissionReport:
-        """Generate full admission report."""
+        """Generate full admission report.
+
+        The aggregate level is ESCALATED by the sum of findings but can never fall
+        below the worst single finding. Previously the score thresholds alone decided
+        the headline, so one `privileged_container` (CRITICAL, 60 points) reported as
+        merely HIGH, and any lone HIGH finding (30) reported as MEDIUM — the report
+        contradicted its own most severe finding.
+        """
         all_findings = self.findings + policy_findings
 
         total_risk = sum(SEVERITY_WEIGHTS.get(f.severity, 0) for f in all_findings)
@@ -736,6 +743,11 @@ class AdmissionReviewer:
             risk_level = "MEDIUM"
         else:
             risk_level = "LOW"
+
+        severity_order = {"LOW": 0, "MEDIUM": 1, "HIGH": 2, "CRITICAL": 3}
+        worst = max((severity_order.get(f.severity, 0) for f in all_findings), default=0)
+        if severity_order[risk_level] < worst:
+            risk_level = [name for name, rank in severity_order.items() if rank == worst][0]
 
         return AdmissionReport(
             pod_name=pod.get("metadata", {}).get("name", "unnamed"),

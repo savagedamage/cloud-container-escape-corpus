@@ -44,6 +44,13 @@
     "total_risk_score": { "type": "integer", "minimum": 0 },
     "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
     "package_format": { "type": ["string", "null"], "enum": ["dpkg", "apk", null] },
+    "platform": { "type": ["string", "null"] },
+    "platform_old": { "type": ["string", "null"] },
+    "platform_new": { "type": ["string", "null"] },
+    "architecture_old": { "type": ["string", "null"] },
+    "architecture_new": { "type": ["string", "null"] },
+    "architecture_mismatch": { "type": "boolean" },
+    "intentional_architecture_change": { "type": "boolean" },
     "packages": {
       "type": "object",
       "properties": {

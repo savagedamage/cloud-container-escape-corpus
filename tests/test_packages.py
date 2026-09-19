@@ -105,9 +105,13 @@ class TestDetection:
     def test_image_without_a_known_package_db(self):
         assert detect_format({"/bin/sh": {}, "/usr/lib/libc.so": {}}) is None
 
-    def test_rpm_only_image_is_reported_as_unavailable(self):
-        """A CentOS/RHEL image must not look like a clean, dependency-free diff."""
-        assert detect_format({"/var/lib/rpm/rpmdb.sqlite": {}, "/usr/bin/bash": {}}) is None
+    def test_rpm_only_image_is_recognised(self):
+        """RPM images are parsed (rpmdb.sqlite). The *Berkeley-DB* rpmdb used by
+        CentOS 7 and older is what remains unsupported, and that must report
+        unavailable rather than empty — see tests/test_packages_rpm.py."""
+        from escape_corpus.packages import RPM_SQLITE_PATHS
+        assert detect_format({RPM_SQLITE_PATHS[0]: {}, "/usr/bin/bash": {}}) == "rpm"
+        assert detect_format({RPM_SQLITE_PATHS[1]: {}}) == "rpm"
 
 
 class TestInventoryFromMerge:

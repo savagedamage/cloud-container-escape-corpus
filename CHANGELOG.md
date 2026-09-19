@@ -2,6 +2,68 @@
 
 All notable changes to the Cloud/Container Escape Corpus.
 
+## [1.2.0] — 2026-09-19
+
+Platform correctness, RPM support, and a severity-calibration fix. Five more real
+defects found by testing against real registries and real distributions rather than
+synthetic fixtures.
+
+### Added
+
+- **Platform-aware image diff**: `--platform OS/ARCH[/VARIANT]`, plus
+  `--platform-old`/`--platform-new` for auditing a migration. `crane` resolves to the
+  **host** architecture by default, so the previous behaviour silently diffed the
+  wrong variant of a multi-arch image. Comparing two *different* architectures is
+  now detected as a meaningless delta (scored, with guidance) unless it was
+  explicitly requested, in which case it is labelled as a migration audit.
+- **RPM package inventory**: `rpmdb.sqlite` headers are parsed directly with the
+  standard library (no rpm/py binding), so RHEL/CentOS/Rocky/Fedora/AlmaLinux images
+  now report package deltas instead of "unavailable". Verified **118/118** packages
+  against rockylinux:9-minimal (`bash 5.1.8-6.el9_1`, `openssl-libs 1:3.0.7-24.el9`).
+  The legacy Berkeley-DB rpmdb still reports unavailable rather than empty.
+- **cgroup v1 support in `runtime-baseline`**: v1 hosts were detected but never read
+  (the code only knew v2 file names), so resource limits came back `None` and
+  resource drift was invisible. v1 read paths, controller extraction from
+  `/proc/self/cgroup`, and `cpu.cfs_quota_us`/`cfs_period_us` normalisation added.
+- **Precision tests** (`tests/test_precision.py`): pods built to the Pod Security
+  Standards "restricted" profile must not be flagged HIGH/CRITICAL, across eight
+  field permutations, while a single dangerous field on such a pod still is.
+- **Severity-calibration tests** (`tests/test_severity_calibration.py`): pins the
+  "no understatement" invariant and the score ordering between pod classes that the
+  labels saturate.
+
+### Fixed
+
+- **Report level could understate its own worst finding.** A pod whose only problem
+  was `privileged: true` (a CRITICAL check worth 60 points) reported as merely HIGH,
+  and any lone HIGH finding (30 points) reported as MEDIUM. The aggregate level is
+  now escalated by the finding sum but can never fall below the worst single finding.
+- **cgroup resource-limit drift was never compared.** The detector checked only the
+  cgroup path and version — raising memory/CPU/PID limits on a running container went
+  undetected on *both* cgroup generations. Limits and controllers are now compared,
+  with a direction ("Memory limit raised: 512MiB → 2GiB").
+- **Crash on mode-0000 files.** `/etc/shadow-` is mode `0000` in every RHEL image, so
+  the flattener could not read back the file it had just written
+  (`PermissionError` on any `rockylinux`/`centos`/`almalinux` image). The on-disk copy
+  is now readable while the *authoritative* mode is recorded from the tar member —
+  the setuid signal is unaffected (regression-tested).
+- **Registry errors hid the actionable part.** A pull failure reported
+  `Failed to pull <image>` and discarded the runtime's message; it now surfaces
+  `no child with platform linux/amd64 in index ...` and says to pass `--platform`.
+- **Integer rpm header tags decoded their entry count, not their value**, which made
+  `epoch 0` indistinguishable from `epoch 1`, and the source-rpm filter raised
+  `KeyError` when a header had no ARCH tag.
+
+### Changed
+
+- `image-diff` output gains `platform`, `platform_old`, `platform_new`,
+  `architecture_old`, `architecture_new`, `architecture_mismatch` and
+  `intentional_architecture_change` (schema updated). `--platform` is forwarded by
+  the unified `escape-corpus` CLI.
+- Tests **193 → 254**, coverage **85% → 86%**; `escape_corpus/packages.py` at 99%.
+- BadPods benchmark regenerated: still **128/128 flagged**, with recalibrated
+  severity attribution.
+
 ## [1.1.0] — 2026-09-19
 
 Completeness and evidence pass: the corpus's own claims became testable, and the

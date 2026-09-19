@@ -58,7 +58,7 @@ MOUNTS_NO_HOST = "\n".join([
 @pytest.fixture
 def make_collector(monkeypatch):
     """Factory: a RuntimeBaseline whose in-container exec is canned."""
-    def _make(mounts=MOUNTS):
+    def _make(mounts=MOUNTS, files=None):
         calls = []
         table = {
             ("cat", "/proc/self/status"): STATUS,
@@ -81,6 +81,8 @@ def make_collector(monkeypatch):
             ("readlink", "/proc/self/ns/cgroup"): "cgroup:[4026531835]",
             ("readlink", "/proc/self/ns/time"): "time:[4026531834]",
         }
+        if files:
+            table.update(files)
 
         def fake_run(self, cmd):
             calls.append(tuple(cmd))
@@ -268,6 +270,79 @@ class TestDriftDetectorMatrix:
         findings = DriftDetector(second).detect(
             collector.capture(previous_hash=second.hash_chain))
         assert [f for f in findings if f["category"] == "integrity"] == []
+
+
+class TestCgroupV1:
+    """cgroup v1 hosts read their limits from entirely different paths.
+
+    Regression: v1 was *detected* but never read — every limit came back None, so
+    resource-limit drift was invisible on v1 nodes.
+    """
+
+    # v1 has no cgroup.controllers/cpu.max/...; the v2 keys are blanked so only
+    # the v1 paths can satisfy the reader.
+    V1_FILES = {
+        ("cat", "/proc/self/cgroup"): (
+            "11:memory:/docker/abcdef\n"
+            "10:cpu,cpuacct:/docker/abcdef\n"
+            "9:pids:/docker/abcdef\n"
+            "1:name=systemd:/docker/abcdef"
+        ),
+        ("cat", "/sys/fs/cgroup/cgroup.controllers"): "",
+        ("cat", "/sys/fs/cgroup/cpu.max"): "",
+        ("cat", "/sys/fs/cgroup/memory.max"): "",
+        ("cat", "/sys/fs/cgroup/pids.max"): "",
+        ("cat", "/sys/fs/cgroup/cgroup.procs"): "",
+        ("cat", "/sys/fs/cgroup/cpu/cpu.cfs_quota_us"): "50000",
+        ("cat", "/sys/fs/cgroup/cpu/cpu.cfs_period_us"): "100000",
+        ("cat", "/sys/fs/cgroup/memory/memory.limit_in_bytes"): "536870912",
+        ("cat", "/sys/fs/cgroup/pids/pids.max"): "128",
+        ("cat", "/sys/fs/cgroup/pids/cgroup.procs"): "1\n42\n43",
+    }
+
+    def test_version_and_path_are_detected(self, make_collector):
+        snap = make_collector(files=self.V1_FILES).capture().cgroups
+        assert snap.cgroup_version == "v1"
+        assert snap.cgroup_path.startswith("11:memory:")
+
+    def test_limits_are_read_from_v1_paths(self, make_collector):
+        snap = make_collector(files=self.V1_FILES).capture().cgroups
+        assert snap.memory_limit == "536870912"
+        assert snap.pids_limit == "128"
+        # v1 quota+period expressed in the v2 "quota period" shape
+        assert snap.cpu_limit == "50000 100000"
+
+    def test_controllers_come_from_proc_self_cgroup(self, make_collector):
+        snap = make_collector(files=self.V1_FILES).capture().cgroups
+        assert {"memory", "cpu", "cpuacct", "pids"} <= set(snap.controllers)
+
+    def test_unlimited_cpu_quota_maps_to_max(self, make_collector):
+        files = {**self.V1_FILES,
+                 ("cat", "/sys/fs/cgroup/cpu/cpu.cfs_quota_us"): "-1"}
+        snap = make_collector(files=files).capture().cgroups
+        assert snap.cpu_limit == "max"
+
+    def test_procs_count_uses_the_v1_pids_controller(self, make_collector):
+        snap = make_collector(files=self.V1_FILES).capture().cgroups
+        assert snap.cgroup_procs_count == 3
+
+    def test_memory_limit_change_on_v1_is_detected_as_drift(self, make_collector):
+        """The finding that motivates the fix: on v1, a silent limit change used to
+        compare None == None and never fire."""
+        baseline = make_collector(files=self.V1_FILES).capture()
+        tightened = {**self.V1_FILES,
+                     ("cat", "/sys/fs/cgroup/memory/memory.limit_in_bytes"): "268435456"}
+        current = make_collector(files=tightened).capture()
+        current.previous_hash = baseline.hash_chain
+
+        findings = DriftDetector(baseline).detect(current)
+        assert any(f["category"] == "cgroup" for f in findings), [f["category"] for f in findings]
+
+    def test_no_drift_when_v1_state_is_unchanged(self, make_collector):
+        baseline = make_collector(files=self.V1_FILES).capture()
+        current = make_collector(files=self.V1_FILES).capture()
+        current.previous_hash = baseline.hash_chain
+        assert DriftDetector(baseline).detect(current) == []
 
 
 class TestCliMain:
