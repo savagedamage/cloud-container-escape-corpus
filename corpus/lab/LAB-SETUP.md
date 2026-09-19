@@ -100,12 +100,22 @@ kubectl label namespace secure pod-security.kubernetes.io/enforce=restricted --o
 The manual steps above (cluster + namespaces + pod matrix) are scripted and idempotent — re-running is safe (`set -euo pipefail`, every step no-ops when the target state exists):
 
 ```bash
-./corpus/lab/up.sh        # create kind cluster + namespaces, apply lab manifests
-./corpus/lab/verify.sh    # verify only — applies nothing
+./corpus/lab/up.sh --yes    # create kind cluster + namespaces, apply lab manifests
+./corpus/lab/verify.sh      # verify only — applies nothing
 ```
+
+> **`up.sh` requires an explicit `--yes`.** Everything it deploys is deliberately
+> dangerous (privileged containers, `hostPID`, writable `/sys/fs/cgroup` and
+> `/lib/modules` host mounts). Without the flag — or `LAB_CONFIRM=1` — it prints
+> what it would do and **exits non-zero before touching the cluster**; on a
+> terminal it asks for confirmation first. This is a real gate because a comment
+> in the script header is not one: the first version of this script had only that
+> comment, and an automated caller deployed the fixtures onto a daily-driver host
+> without hesitating.
 
 - `up.sh` creates the `escape-lab` kind cluster when absent (override with `LAB_CLUSTER_NAME`, wait with `LAB_KIND_WAIT`), ensures `vulnerable` (PodSecurity=privileged) and `secure` (PodSecurity=restricted) exist with the right labels, then `kubectl apply`s every `corpus/lab/*-pod.yaml`. If docker is not yet reachable in the shell it re-execs through `sg docker` when available, otherwise it tells you to run `newgrp docker` first.
 - `verify.sh` runs `admission-review --pod <file> --json` for each manifest and asserts `risk_level` is `CRITICAL` or `HIGH`, printing `PASS`/`FAIL` per manifest and exiting non-zero if any manifest is under-detected. It then does a `runtime-baseline baseline` → `verify` round trip against the `<cluster>-control-plane` container (runtime `docker`) and expects `No drift detected`. The runtime half reports `SKIP` (not `FAIL`) when docker or the kind cluster are unavailable.
+- **Tear down when done.** These fixtures are not meant to keep running: `kubectl delete pods -n vulnerable --all`, or `kind delete cluster --name escape-lab` to remove the whole lab.
 
 Fixture manifests — all in `namespace: vulnerable`, all currently detected `CRITICAL`:
 

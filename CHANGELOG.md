@@ -65,6 +65,14 @@ cloud half of its name became true.
 
 ### Changed
 
+- **Lab bring-up now requires explicit consent.** `corpus/lab/up.sh` refuses to
+  deploy the deliberately vulnerable fixtures without `--yes` (or `LAB_CONFIRM=1`),
+  printing what it would do and exiting non-zero *before* the first cluster
+  mutation; on a terminal it prompts. Added because the previous version only
+  carried a header comment saying "isolated lab only", and an automated caller
+  deployed the privileged + hostPID fixtures onto a daily-driver host without
+  hesitating — a comment is not a control. `LAB-SETUP.md` documents the flag and
+  the teardown command.
 - **Test coverage 20% → 85%** (193 tests, from 6), with an enforced 80% floor.
   New suites: synthetic-OCI fixtures for `image_diff`, a canned-runtime harness
   for `runtime_baseline`, the CLI validation gate, the admission policy engine,

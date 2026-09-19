@@ -137,6 +137,32 @@ PASS  runtime-baseline  container=escape-lab-control-plane  No drift detected
 Earlier live cluster run: escape fixture = CRITICAL/725, secure fixture = MEDIUM/20,
 matching the dry-run fixture scores exactly.
 
+**The gate actually fails** — a gate that cannot fail is not a gate. A deliberately
+compliant pod dropped into `corpus/lab/` was rejected:
+
+```
+FAIL  zz-tmp-compliant-pod.yaml          risk_level=LOW      score=15   (expected CRITICAL or HIGH)
+[lab-verify] FAILED: 1 check(s) failed
+$ bash corpus/lab/verify.sh; echo $?    # -> 1
+```
+
+**`up.sh` refuses to deploy without explicit consent** (added after an automated
+caller deployed the fixtures onto a daily-driver host, reading past the header
+comment that said not to):
+
+```
+$ bash corpus/lab/up.sh </dev/null      # no TTY, no flag
+[lab-up] WARN: this deploys DELIBERATELY VULNERABLE pods (privileged, hostPID, writable
+[lab-up] WARN: cgroup and /lib/modules host mounts) into kind cluster 'escape-lab'.
+[lab-up] ERROR: refusing to deploy vulnerable pods without confirmation (stdin is not a terminal).
+# exit 1, and 0 pods in the 'vulnerable' namespace afterwards
+```
+
+**Fixtures are not left running.** The eight vulnerable pods deployed during
+verification were torn down (`kubectl delete pods -n vulnerable --all`), leaving only
+the restricted control pod in `secure`. Re-deploy with `up.sh --yes`, which requires
+deliberate intent.
+
 ## 7. `image-diff` — live registry pulls
 
 | Comparison | Files | Package delta | Result |

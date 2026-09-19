@@ -18,6 +18,26 @@ log() { printf '[lab-up] %s\n' "$*"; }
 warn() { printf '[lab-up] WARN: %s\n' "$*" >&2; }
 die() { printf '[lab-up] ERROR: %s\n' "$*" >&2; exit 1; }
 
+# --- consent gate ------------------------------------------------------------
+# The manifests in this directory are deliberately dangerous: privileged
+# containers, hostPID, writable /sys/fs/cgroup and /lib/modules host mounts.
+# A comment at the top of this file is not a control — an automated caller
+# reads past it — so deployment requires an explicit flag.
+ASSUME_YES=0
+for arg in "$@"; do
+    case "$arg" in
+        -y|--yes) ASSUME_YES=1 ;;
+        -h|--help)
+            printf 'usage: %s [--yes]\n\n' "${BASH_SOURCE[0]}"
+            printf 'Deploys the container-escape lab fixtures into a kind cluster.\n'
+            printf 'For an isolated lab cluster ONLY. --yes (or LAB_CONFIRM=1) is\n'
+            printf 'required when stdin is not a terminal.\n'
+            exit 0 ;;
+        *) die "unknown argument: $arg (try --help)" ;;
+    esac
+done
+[[ "${LAB_CONFIRM:-0}" == "1" ]] && ASSUME_YES=1
+
 # --- docker access -----------------------------------------------------------
 # A fresh login shell may not yet be in the docker group. If docker is not
 # usable, try one re-exec through `sg docker` (no-op loop guard), otherwise
@@ -34,6 +54,23 @@ fi
 for bin in docker kind kubectl; do
     command -v "$bin" >/dev/null 2>&1 || die "required command not found: $bin"
 done
+
+# --- consent gate ------------------------------------------------------------
+# Placed before the first cluster mutation, so an accidental invocation costs
+# nothing at all. Without an explicit flag this refuses rather than deploying
+# privileged + hostPID pods into whatever cluster happens to be current.
+if ((ASSUME_YES == 0)); then
+    warn "this deploys DELIBERATELY VULNERABLE pods (privileged, hostPID, writable"
+    warn "cgroup and /lib/modules host mounts) into kind cluster '$CLUSTER_NAME'."
+    warn "For an isolated lab cluster ONLY - never a shared or daily-driver environment."
+    if [[ -t 0 ]]; then
+        read -r -p "[lab-up] type 'yes' to continue: " reply
+        [[ "$reply" == "yes" ]] || die "aborted by operator"
+    else
+        die "refusing to deploy vulnerable pods without confirmation (stdin is not a terminal).
+      Disposable lab cluster? Re-run with --yes (or LAB_CONFIRM=1)."
+    fi
+fi
 
 # --- kind cluster ------------------------------------------------------------
 if kind get clusters 2>/dev/null | grep -qx "$CLUSTER_NAME"; then
