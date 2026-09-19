@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """Unit tests for drift detector + admission reviewer without needing a cluster."""
-import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from escape_corpus.runtime_baseline import (
-    RuntimeSnapshot, CapabilitySnapshot, CgroupSnapshot, NamespaceSnapshot,
-    ProcSnapshot, MountSnapshot, DriftDetector,
-)
 from escape_corpus.admission_review import AdmissionReviewer, load_pod_spec
+from escape_corpus.runtime_baseline import (
+    CapabilitySnapshot,
+    CgroupSnapshot,
+    DriftDetector,
+    MountSnapshot,
+    NamespaceSnapshot,
+    ProcSnapshot,
+    RuntimeSnapshot,
+)
 
 
 def make_snapshot(**overrides):
@@ -76,7 +80,6 @@ def test_namespace_escape_detected():
 
 def test_docker_sock_mount_detected():
     baseline = make_snapshot()
-    m = baseline.mounts
     bad = MountSnapshot(
         docker_sock=True, containerd_sock=False, cri_o_sock=False,
         host_root=False, host_proc=False, host_sys=False,

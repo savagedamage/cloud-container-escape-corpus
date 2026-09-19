@@ -7,5 +7,5 @@
      (evt.arg.name startswith "/proc" and evt.arg.name != "/proc") or
      (evt.arg.name startswith "/sys" and evt.arg.name != "/sys"))
   output: sensitive mount (path=%evt.arg.name proc=%proc.name container=%container.name)
-  priority: HIGH
+  priority: WARNING
   tags: [container, escape, hostpath, mitre_t1611]

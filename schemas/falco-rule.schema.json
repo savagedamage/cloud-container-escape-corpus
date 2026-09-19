@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/savagedamage/cloud-container-escape-corpus/schemas/falco-rule.schema.json",
+  "title": "Falco rule file",
+  "description": "A Falco rules file is a YAML document containing a list of rule objects. This schema validates the subset the corpus ships; it is intentionally permissive about condition syntax (Falco's filter language) while insisting the structural fields and priority vocabulary are correct.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["rule", "desc", "condition", "output", "priority"],
+    "additionalProperties": true,
+    "properties": {
+      "rule": { "type": "string", "minLength": 3 },
+      "desc": { "type": "string", "minLength": 10 },
+      "condition": { "type": "string", "minLength": 3 },
+      "output": { "type": "string", "minLength": 3 },
+      "priority": {
+        "type": "string",
+        "enum": ["EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFORMATIONAL", "DEBUG"]
+      },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      },
+      "enabled": { "type": "boolean" }
+    }
+  }
+}

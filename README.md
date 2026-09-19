@@ -14,12 +14,14 @@ applied to OCI and Kubernetes.
 
 | Component | Content | Readable as |
 |---|---|---|
-| **Taxonomy** | 10 container escape techniques, risk-scored, MITRE-mapped | [corpus/taxonomy/](corpus/taxonomy/) + `taxonomy.json` (machine) |
+| **Taxonomy** | 12 techniques — 10 container escape + 2 cloud (IMDS, workload identity), risk-scored, MITRE-mapped | [corpus/taxonomy/](corpus/taxonomy/) + `taxonomy.json` (machine) |
 | **Playbooks** | Per-technique: prerequisites, attack path, PoC sketch, detection, mitigation | [corpus/techniques/](corpus/techniques/) |
-| **Detection rules** | 11 Sigma + 8 Falco rules, indexed to techniques | [corpus/detection/](corpus/detection/) |
+| **Detection rules** | 13 Sigma + 10 Falco rules, indexed to techniques, engine-validated | [corpus/detection/](corpus/detection/) |
 | **Side-channels** | 10 leakage surfaces (/proc, /sys, cgroup, ns, seccomp, sockets, layers, caps, time) | [corpus/side-channels/](corpus/side-channels/) + `side-channels.json` (machine) |
-| **Lab** | kind cluster setup, vulnerable pod matrix, validation plan | [corpus/lab/](corpus/lab/) |
+| **Lab** | kind cluster setup, 7 vulnerable pod manifests, scripted bring-up + verification | [corpus/lab/](corpus/lab/) |
+| **Benchmarks** | Measured results: BadPods recall (128/128), sample image deltas | [corpus/benchmarks/](corpus/benchmarks/) |
 | **Tools** | image-diff, runtime-baseline, admission-review | pip-installable package |
+| **MCP server** | The corpus as agent-callable tools (8 tools + 4 resources) | `escape-corpus-mcp` |
 | **Schemas** | JSON Schemas for taxonomy and every tool output | [schemas/](schemas/) |
 
 The full map for humans: [corpus/INDEX.md](corpus/INDEX.md). For machines:
@@ -29,7 +31,8 @@ The full map for humans: [corpus/INDEX.md](corpus/INDEX.md). For machines:
 ## Install
 
 ```bash
-pip install .            # or: pip install .[dev] for tests + schema validation
+pip install .            # or: pip install .[dev] for tests, lint and schema validation
+pip install '.[mcp]'     # + the MCP server for agent use
 escape-corpus --version
 ```
 
@@ -48,6 +51,12 @@ Flattens both images and diffs the merged filesystems: new binaries (ELF,
 setuid, file capabilities), changed entrypoint/cmd/User, secret-aware env
 deltas, sensitive path changes (`/etc/shadow`, SSH keys, kubeconfigs).
 Hardlink-aware (busybox-style applet images don't drown the diff in noise).
+
+Also reports a **package-level delta** (dpkg/apk `added`/`removed`/`upgraded`),
+which names the cause behind a noisy file count — `nginx:1.24→1.25` reads as
+"2652 files changed" at file level and "bullseye → bookworm: `libssl1.1 → libssl3`,
+120 packages upgraded" at package level. RPM-based images report the inventory as
+*unavailable* rather than an empty delta, so they never look clean by accident.
 
 Fills the gap: dive/trivy scan single images; nothing produces a risk-weighted
 delta *between* two tags.
@@ -86,33 +95,69 @@ escape-corpus rules --technique CE-007 --json # rules covering a technique
 escape-corpus validate                        # cross-check corpus consistency
 ```
 
+### `escape-corpus-mcp` — the corpus as agent tooling
+
+```bash
+pip install '.[mcp]' && escape-corpus-mcp     # stdio transport
+```
+
+Exposes 8 tools (`list_techniques`, `get_technique`, `list_side_channels`,
+`list_detection_rules`, `validate_corpus`, `review_pod`, `diff_images`,
+`baseline_snapshot`) and 4 resources (`corpus://taxonomy`, `corpus://side-channels`,
+`corpus://index`, `corpus://detection-index`). Read-only with respect to your
+infrastructure: `review_pod` is pure analysis, `baseline_snapshot` reads `/proc`
+via the runtime, and `diff_images` only pulls from a registry (stated in its
+description). The in-repo agent skill lives at [skill/SKILL.md](skill/SKILL.md).
+
 ## Verification status
 
-Unit suite (6/6): `python -m pytest tests/`
+Full record with commands and observed output: **[VERIFICATION.md](VERIFICATION.md)**.
+Reproduce with `bash scripts/verify.sh` (offline) or `--live` (registry + docker).
 
-Live-verified (kind v1.37.0, containerd 2.3.4, docker 29.8.0):
+Current state — **11/11 checks passing**:
 
-- `image-diff`: `busybox:1.35→1.36` = LOW(5); `nginx:1.23→1.24` = MEDIUM(35),
-  `/etc/shadow` + User change flagged
-- `runtime-baseline`: baseline→verify clean; SYS_PTRACE cross-verify = CRITICAL
-  (caps + all 8 namespaces); monitor mode clean with rolling hash chain
-- `admission-review`: live escape pod = CRITICAL/725, secure pod = MEDIUM/20 —
-  matches dry-run fixture scores exactly
+- **Tests**: 193 passing, **85% coverage** (enforced floor 80% in CI, up from 20%)
+- **Lint**: `ruff check` clean
+- **Rules**: `sigma check` — 13 rules, 0 errors, 0 issues (engine-validated)
+- **Consistency**: `escape-corpus validate` — 12 techniques, 23 rule refs,
+  10 side channels, 6 schemas, cross-references consistent
+- **Admission benchmark**: BishopFox BadPods **128/128 flagged**, severity gradient
+  tracks the permission level (median 125 → 380)
+- **Admission fixtures**: 7/7 lab manifests CRITICAL; escape fixture CRITICAL/725,
+  secure fixture MEDIUM/20 — matching dry-run scores exactly
+- **`image-diff` (live)**: `busybox:1.35→1.36` LOW(5); `nginx:1.23→1.24` MEDIUM(35),
+  `/etc/shadow` + User change flagged; `nginx:1.24→1.25` CRITICAL(11035) with a
+  120-package upgrade delta
+- **`runtime-baseline` (live)**: baseline→verify clean; SYS_PTRACE cross-verify =
+  CRITICAL (capability bit 19 + all 8 namespace inodes); monitor mode clean with a
+  rolling hash chain
+- **Docs**: `mkdocs build --strict` from generated sources — 23 pages
+
+The test suite found four real bugs that review had not: host `/proc` bind-mount
+detection keyed on the wrong mount field, `/etc/kubernetes` matching the shorter
+`/etc` key, unbounded `startswith` path matching, and `review_pod` returning
+dataclasses that did not survive JSON serialization.
 
 ## Repository layout
 
 ```
-escape_corpus/        # pip-installable Python package (3 tools + unified CLI)
+escape_corpus/        # pip-installable package (3 tools + CLI + MCP server)
+  corpus_data.py      #   single source of truth for corpus paths/loading
+  packages.py         #   dpkg/apk inventory + delta
 corpus/
   taxonomy/           # human taxonomy + taxonomy.json (machine)
-  techniques/         # 10 per-technique playbooks (CE-001 … CE-010)
-  detection/          # 11 Sigma + 8 Falco rules + rule index
+  techniques/         # 12 per-technique playbooks (CE-001 … CE-012)
+  detection/          # 13 Sigma + 10 Falco rules + rule index
   side-channels/      # /proc /sys cgroup ns seccomp leakage inventory
-  lab/                # LAB-SETUP.md + vulnerable pod manifests
+  lab/                # LAB-SETUP.md, 7 pod manifests, up.sh + verify.sh
+  benchmarks/         # measured results (BadPods, sample image diffs)
   INDEX.md            # human master index
   index.yaml          # machine master index
 schemas/              # JSON Schemas (draft 2020-12) for all structured output
-tests/                # unit tests + pod fixtures + example policies
+scripts/              # verify.sh, benchmark_badpods.py, build_docs.py
+skill/                # agent skill for using this corpus
+docs/                 # roadmap.md (+ generated site pages, gitignored)
+tests/                # 193 tests + pod fixtures + example policies
 ```
 
 ## Usage policy

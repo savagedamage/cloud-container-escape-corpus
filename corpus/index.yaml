@@ -22,6 +22,8 @@ techniques:
   - CE-008
   - CE-009
   - CE-010
+  - CE-011
+  - CE-012
 tools:
   - name: image-diff
     module: escape_corpus.image_diff

@@ -1,0 +1,22 @@
+# pidfd_getfd pod — validates file-descriptor theft across namespaces:
+# hostPID makes host PIDs visible, CAP_SYS_PTRACE satisfies the
+# PTRACE_MODE_ATTACH_REALCREDS check in pidfd_open/pidfd_getfd, and the
+# container duplicates a host process fd (a socket or open host file) without
+# ever attaching a debugger.
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pidfd-getfd-pod
+  namespace: vulnerable
+spec:
+  hostPID: true
+  containers:
+    - name: fd-thief
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        capabilities:
+          add:
+            - SYS_PTRACE
+            - SYS_ADMIN

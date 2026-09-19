@@ -1,0 +1,30 @@
+# eBPF probe injection pod — validates kernel-level escape via eBPF:
+# CAP_BPF/CAP_PERFMON load the program, CAP_SYS_ADMIN attaches it to a
+# host-wide tracepoint/kprobe, and bpffs is mounted so the probe (and its
+# verifier-granted helpers) survive container teardown.
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ebpf-probe-pod
+  namespace: vulnerable
+spec:
+  hostPID: true
+  containers:
+    - name: ebpf-loader
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        capabilities:
+          add:
+            - BPF
+            - PERFMON
+            - SYS_ADMIN
+            - SYS_RESOURCE
+      volumeMounts:
+        - name: bpffs
+          mountPath: /sys/fs/bpf
+  volumes:
+    - name: bpffs
+      hostPath:
+        path: /sys/fs/bpf

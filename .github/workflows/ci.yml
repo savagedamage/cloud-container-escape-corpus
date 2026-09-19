@@ -9,17 +9,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.10", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install
-        run: pip install .[dev]
-      - name: Unit tests
-        run: python -m pytest tests/ -v
+        run: pip install .[dev] "fastmcp>=2.0"
+      - name: Lint
+        run: ruff check .
+      - name: Unit tests (80% coverage floor)
+        run: python -m pytest tests/ -v --cov=escape_corpus --cov-report=term-missing
+      - name: Sigma rules are engine-valid
+        run: sigma check corpus/detection/sigma/
       - name: Corpus consistency
         run: escape-corpus validate
       - name: Schemas parse
@@ -31,6 +36,24 @@ jobs:
           escape-corpus rules --technique CE-007 | head -3
           escape-corpus side-channels --id SC-001 | head -2
           escape-corpus schemas
+      - name: Verification script (offline checks)
+        run: bash scripts/verify.sh
+
+  docs:
+    # The docs site is generated from the canonical files, so this catches
+    # generator rot (a link to a file that no longer exists fails --strict).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install mkdocs-material PyYAML
+      - name: Assemble and build the site
+        run: |
+          python3 scripts/build_docs.py
+          mkdocs build --strict
 
   live-tools:
     runs-on: ubuntu-latest

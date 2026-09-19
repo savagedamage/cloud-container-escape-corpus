@@ -95,7 +95,31 @@ kubectl create namespace secure
 kubectl label namespace secure pod-security.kubernetes.io/enforce=restricted --overwrite
 ```
 
-## 5. Test pod matrix
+## 5. Scripted bring-up
+
+The manual steps above (cluster + namespaces + pod matrix) are scripted and idempotent — re-running is safe (`set -euo pipefail`, every step no-ops when the target state exists):
+
+```bash
+./corpus/lab/up.sh        # create kind cluster + namespaces, apply lab manifests
+./corpus/lab/verify.sh    # verify only — applies nothing
+```
+
+- `up.sh` creates the `escape-lab` kind cluster when absent (override with `LAB_CLUSTER_NAME`, wait with `LAB_KIND_WAIT`), ensures `vulnerable` (PodSecurity=privileged) and `secure` (PodSecurity=restricted) exist with the right labels, then `kubectl apply`s every `corpus/lab/*-pod.yaml`. If docker is not yet reachable in the shell it re-execs through `sg docker` when available, otherwise it tells you to run `newgrp docker` first.
+- `verify.sh` runs `admission-review --pod <file> --json` for each manifest and asserts `risk_level` is `CRITICAL` or `HIGH`, printing `PASS`/`FAIL` per manifest and exiting non-zero if any manifest is under-detected. It then does a `runtime-baseline baseline` → `verify` round trip against the `<cluster>-control-plane` container (runtime `docker`) and expects `No drift detected`. The runtime half reports `SKIP` (not `FAIL`) when docker or the kind cluster are unavailable.
+
+Fixture manifests — all in `namespace: vulnerable`, all currently detected `CRITICAL`:
+
+| Manifest | Technique |
+|----------|-----------|
+| `privileged-escape-pod.yaml` | privileged container + SYS_ADMIN + host `/proc` |
+| `docker-socket-pod.yaml` | runtime socket abuse via `docker.sock` |
+| `hostpath-proc-pod.yaml` | host PID namespace abuse via `/proc` mount |
+| `cgroup-release-agent-pod.yaml` | cgroup release_agent host code execution |
+| `ebpf-probe-pod.yaml` | eBPF probe injection (CAP_BPF/CAP_SYS_ADMIN + bpffs) |
+| `pidfd-getfd-pod.yaml` | cross-namespace fd theft (hostPID + SYS_PTRACE) |
+| `capability-chain-pod.yaml` | DAC_OVERRIDE + SYS_MODULE capability chain |
+
+## 6. Test pod matrix
 
 ```bash
 # Privileged escape pod (vulnerable ns)
@@ -107,21 +131,39 @@ kubectl apply -f corpus/lab/docker-socket-pod.yaml -n vulnerable
 # hostPath /proc pod
 kubectl apply -f corpus/lab/hostpath-proc-pod.yaml -n vulnerable
 
+# cgroup release_agent pod
+kubectl apply -f corpus/lab/cgroup-release-agent-pod.yaml -n vulnerable
+
+# eBPF probe injection pod
+kubectl apply -f corpus/lab/ebpf-probe-pod.yaml -n vulnerable
+
+# pidfd_getfd pod (hostPID + SYS_PTRACE)
+kubectl apply -f corpus/lab/pidfd-getfd-pod.yaml -n vulnerable
+
+# capability-chain pod (DAC_OVERRIDE + SYS_MODULE)
+kubectl apply -f corpus/lab/capability-chain-pod.yaml -n vulnerable
+
+# ...or just apply every lab fixture at once
+kubectl apply -f corpus/lab/
+
 # Baseline tool on each pod
 runtime-baseline baseline --container <pod> --runtime crictl --output baseline-<pod>.json
 ```
 
-## 6. Escape technique validation matrix
+## 7. Escape technique validation matrix
 
 | Technique | Pod config | Validation command | Expected result |
 |-----------|-----------|-------------------|-----------------|
 | Docker socket | docker-socket-pod | `docker -H unix:///var/run/docker.sock ps` | Host containers listed |
 | hostPath /proc | hostpath-proc-pod | `nsenter -t 1 -a /bin/bash` | Host shell |
-| cgroup release_agent | privileged pod | standard PoC | Host code exec |
+| cgroup release_agent | cgroup-release-agent-pod | standard PoC | Host code exec |
+| eBPF probe injection | ebpf-probe-pod | load + attach a tracepoint probe | Probe runs in host kernel |
+| pidfd_getfd | pidfd-getfd-pod | `pidfd_getfd` on a host PID's fd | Host fd duplicated |
+| Capability chain | capability-chain-pod | `insmod` from the mounted module path | Module loaded in host kernel |
 | K8s RBAC escalation | any pod + permissive SA | `kubectl auth can-i --list` | Impersonation paths |
 | Seccomp bypass | privileged pod | probe syscalls | Blocked syscall list |
 
-## 7. Admission review in CI
+## 8. Admission review in CI
 
 ```bash
 # Dry-run pod specs against built-in + custom policies
@@ -135,7 +177,7 @@ exit(1 if r['risk_level'] in ('CRITICAL','HIGH') else 0)
 "
 ```
 
-## 8. Runtime drift monitoring
+## 9. Runtime drift monitoring
 
 ```bash
 # Take baseline at deploy time

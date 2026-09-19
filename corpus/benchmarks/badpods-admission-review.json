@@ -1,0 +1,2767 @@
+{
+  "totals": {
+    "objects": 128,
+    "flagged": 128
+  },
+  "by_level": {
+    "everything-allowed": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "host_network": 16,
+        "host_pid": 16,
+        "host_ipc": 16,
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "host_path_root": 32,
+        "privileged_container": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16
+      },
+      "misses": []
+    },
+    "hostipc": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "host_ipc": 16,
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16,
+        "no_security_context": 16,
+        "host_network": 1,
+        "host_pid": 1
+      },
+      "misses": []
+    },
+    "hostnetwork": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "host_network": 16,
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16,
+        "no_security_context": 16
+      },
+      "misses": []
+    },
+    "hostpath": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "host_path_root": 32,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16,
+        "no_security_context": 16
+      },
+      "misses": []
+    },
+    "hostpid": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "host_pid": 16,
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16,
+        "no_security_context": 16
+      },
+      "misses": []
+    },
+    "nothing-allowed": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16,
+        "no_security_context": 16
+      },
+      "misses": []
+    },
+    "priv": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "privileged_container": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16
+      },
+      "misses": []
+    },
+    "priv-and-hostpid": {
+      "total": 16,
+      "flagged": 16,
+      "checks": {
+        "host_pid": 16,
+        "service_account_default": 16,
+        "automount_service_account_token": 16,
+        "privileged_container": 16,
+        "capabilities_not_dropped": 16,
+        "no_run_as_non_root": 16,
+        "run_as_root": 16,
+        "allow_privilege_escalation": 16,
+        "no_read_only_rootfs": 16,
+        "no_seccomp_profile": 16,
+        "no_resources_limits": 16
+      },
+      "misses": []
+    }
+  },
+  "results": [
+    {
+      "level": "everything-allowed",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/everything-allowed/cronjob/everything-allowed-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/everything-allowed/cronjob/everything-allowed-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/deamonset/everything-allowed-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/deamonset/everything-allowed-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/everything-allowed/deployment/everything-allowed-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/everything-allowed/deployment/everything-allowed-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/everything-allowed/job/everything-allowed-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/everything-allowed/job/everything-allowed-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/everything-allowed/pod/everything-allowed-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/everything-allowed/pod/everything-allowed-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/replicaset/everything-allowed-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/replicaset/everything-allowed-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/everything-allowed/replicationcontroller/everything-allowed-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/everything-allowed/replicationcontroller/everything-allowed-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/statefulset/everything-allowed-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "everything-allowed",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/everything-allowed/statefulset/everything-allowed-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 380,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostipc/cronjob/hostipc-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostipc/cronjob/hostipc-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostipc/deamonset/hostipc-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostipc/deamonset/hostipc-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 215,
+      "findings": [
+        "host_network",
+        "host_pid",
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostipc/deployment/hostipc-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostipc/deployment/hostipc-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostipc/job/hostipc-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostipc/job/hostipc-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostipc/pod/hostipc-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostipc/pod/hostipc-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostipc/replicaset/hostipc-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostipc/replicaset/hostipc-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostipc/replicationcontroller/hostipc-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostipc/replicationcontroller/hostipc-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostipc/statefulset/hostipc-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostipc",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostipc/statefulset/hostipc-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_ipc",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostnetwork/cronjob/hostnetwork-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostnetwork/cronjob/hostnetwork-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/deamonset/hostnetwork-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/deamonset/hostnetwork-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostnetwork/deployment/hostnetwork-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostnetwork/deployment/hostnetwork-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostnetwork/job/hostnetwork-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostnetwork/job/hostnetwork-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostnetwork/pod/hostnetwork-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostnetwork/pod/hostnetwork-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/replicaset/hostnetwork-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/replicaset/hostnetwork-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostnetwork/replicationcontroller/hostnetwork-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostnetwork/replicationcontroller/hostnetwork-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/statefulset/hostnetwork-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostnetwork",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostnetwork/statefulset/hostnetwork-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_network",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostpath/cronjob/hostpath-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostpath/cronjob/hostpath-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostpath/deamonset/hostpath-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostpath/deamonset/hostpath-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostpath/deployment/hostpath-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostpath/deployment/hostpath-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostpath/job/hostpath-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostpath/job/hostpath-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostpath/pod/hostpath-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostpath/pod/hostpath-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostpath/replicaset/hostpath-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostpath/replicaset/hostpath-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostpath/replicationcontroller/hostpath-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostpath/replicationcontroller/hostpath-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostpath/statefulset/hostpath-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpath",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostpath/statefulset/hostpath-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 245,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "host_path_root",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "host_path_root",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostpid/cronjob/hostpid-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/hostpid/cronjob/hostpid-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostpid/deamonset/hostpid-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/hostpid/deamonset/hostpid-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostpid/deployment/hostpid-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/hostpid/deployment/hostpid-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostpid/job/hostpid-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/hostpid/job/hostpid-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostpid/pod/hostpid-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/hostpid/pod/hostpid-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostpid/replicaset/hostpid-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/hostpid/replicaset/hostpid-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostpid/replicationcontroller/hostpid-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/hostpid/replicationcontroller/hostpid-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostpid/statefulset/hostpid-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "hostpid",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/hostpid/statefulset/hostpid-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 155,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/nothing-allowed/cronjob/nothing-allowed-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/nothing-allowed/cronjob/nothing-allowed-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/deamonset/nothing-allowed-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/deamonset/nothing-allowed-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/nothing-allowed/deployment/nothing-allowed-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/nothing-allowed/deployment/nothing-allowed-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/nothing-allowed/job/nothing-allowed-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/nothing-allowed/job/nothing-allowed-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/nothing-allowed/pod/nothing-allowed-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/nothing-allowed/pod/nothing-allowed-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/replicaset/nothing-allowed-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/replicaset/nothing-allowed-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/nothing-allowed/replicationcontroller/nothing-allowed-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/nothing-allowed/replicationcontroller/nothing-allowed-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/statefulset/nothing-allowed-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "nothing-allowed",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/nothing-allowed/statefulset/nothing-allowed-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 125,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits",
+        "no_security_context"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/priv/cronjob/priv-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/priv/cronjob/priv-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/priv/deamonset/priv-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/priv/deamonset/priv-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/priv/deployment/priv-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/priv/deployment/priv-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/priv/job/priv-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/priv/job/priv-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/priv/pod/priv-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/priv/pod/priv-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/priv/replicaset/priv-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/priv/replicaset/priv-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/priv/replicationcontroller/priv-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/priv/replicationcontroller/priv-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/priv/statefulset/priv-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/priv/statefulset/priv-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 170,
+      "findings": [
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/cronjob/priv-and-hostpid-exec-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "CronJob",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/cronjob/priv-and-hostpid-revshell-cronjob.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/deamonset/priv-and-hostpid-exec-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "DaemonSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/deamonset/priv-and-hostpid-revshell-deamonset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/deployment/priv-and-hostpid-exec-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Deployment",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/deployment/priv-and-hostpid-revshell-deployment.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/job/priv-and-hostpid-exec-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Job",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/job/priv-and-hostpid-revshell-job.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/pod/priv-and-hostpid-exec-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "Pod",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/pod/priv-and-hostpid-revshell-pod.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/replicaset/priv-and-hostpid-exec-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "ReplicaSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/replicaset/priv-and-hostpid-revshell-replicaset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/replicationcontroller/priv-and-hostpid-exec-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "ReplicationController",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/replicationcontroller/priv-and-hostpid-revshell-replicationcontroller.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/statefulset/priv-and-hostpid-exec-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    },
+    {
+      "level": "priv-and-hostpid",
+      "kind": "StatefulSet",
+      "file": "/tmp/badPods/manifests/priv-and-hostpid/statefulset/priv-and-hostpid-revshell-statefulset.yaml",
+      "risk_level": "CRITICAL",
+      "risk_score": 200,
+      "findings": [
+        "host_pid",
+        "service_account_default",
+        "automount_service_account_token",
+        "privileged_container",
+        "capabilities_not_dropped",
+        "no_run_as_non_root",
+        "run_as_root",
+        "allow_privilege_escalation",
+        "no_read_only_rootfs",
+        "no_seccomp_profile",
+        "no_resources_limits"
+      ]
+    }
+  ]
+}

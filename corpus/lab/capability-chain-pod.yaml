@@ -1,0 +1,29 @@
+# Capability-chain pod — validates chaining individually-restricted grants:
+# DAC_OVERRIDE/DAC_READ_SEARCH read and write host files the container has no
+# permission for (module path, /etc/shadow, kubelet config), then SYS_MODULE
+# loads a kernel module from that path to reach host kernel code execution.
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: capability-chain-pod
+  namespace: vulnerable
+spec:
+  containers:
+    - name: cap-chain
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        capabilities:
+          add:
+            - DAC_OVERRIDE
+            - DAC_READ_SEARCH
+            - SYS_MODULE
+      volumeMounts:
+        - name: modules
+          mountPath: /lib/modules
+          readOnly: true
+  volumes:
+    - name: modules
+      hostPath:
+        path: /lib/modules

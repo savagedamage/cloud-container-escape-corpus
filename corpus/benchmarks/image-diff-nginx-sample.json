@@ -1,0 +1,1371 @@
+{
+  "_note": "Sample output of `escape-corpus image-diff nginx:1.24 nginx:1.25`, trimmed to the summary, package delta and top 25 risky file changes. Regenerate with: escape-corpus image-diff nginx:1.24 nginx:1.25 -o out.json",
+  "_captured_utc": "2026-09-19",
+  "image_old": "nginx:1.24",
+  "image_new": "nginx:1.25",
+  "files_added": 829,
+  "files_removed": 1152,
+  "files_modified": 2652,
+  "new_binaries": [
+    "/docker-entrypoint.d/15-local-resolvers.envsh",
+    "/usr/bin/bash",
+    "/usr/bin/cat",
+    "/usr/bin/chgrp",
+    "/usr/bin/chmod",
+    "/usr/bin/chown",
+    "/usr/bin/cp",
+    "/usr/bin/dash",
+    "/usr/bin/date",
+    "/usr/bin/dd",
+    "/usr/bin/df",
+    "/usr/bin/dir",
+    "/usr/bin/dmesg",
+    "/usr/bin/echo",
+    "/usr/bin/egrep",
+    "/usr/bin/false",
+    "/usr/bin/fgrep",
+    "/usr/bin/findmnt",
+    "/usr/bin/grep",
+    "/usr/bin/gunzip",
+    "/usr/bin/gzexe",
+    "/usr/bin/gzip",
+    "/usr/bin/hardlink",
+    "/usr/bin/hostname",
+    "/usr/bin/ln",
+    "/usr/bin/login",
+    "/usr/bin/ls",
+    "/usr/bin/lsblk",
+    "/usr/bin/lsfd",
+    "/usr/bin/lsirq",
+    "/usr/bin/mkdir",
+    "/usr/bin/mknod",
+    "/usr/bin/mktemp",
+    "/usr/bin/more",
+    "/usr/bin/mount",
+    "/usr/bin/mountpoint",
+    "/usr/bin/mv",
+    "/usr/bin/pwd",
+    "/usr/bin/readlink",
+    "/usr/bin/rename.ul",
+    "/usr/bin/rm",
+    "/usr/bin/rmdir",
+    "/usr/bin/run-parts",
+    "/usr/bin/sed",
+    "/usr/bin/sleep",
+    "/usr/bin/stty",
+    "/usr/bin/su",
+    "/usr/bin/sync",
+    "/usr/bin/tar",
+    "/usr/bin/tempfile",
+    "/usr/bin/true",
+    "/usr/bin/uclampset",
+    "/usr/bin/umount",
+    "/usr/bin/uname",
+    "/usr/bin/vdir",
+    "/usr/bin/wdctl",
+    "/usr/bin/which.debianutils",
+    "/usr/bin/zcat",
+    "/usr/bin/zcmp",
+    "/usr/bin/zdiff",
+    "/usr/bin/zegrep",
+    "/usr/bin/zfgrep",
+    "/usr/bin/zforce",
+    "/usr/bin/zgrep",
+    "/usr/bin/zless",
+    "/usr/bin/zmore",
+    "/usr/bin/znew",
+    "/usr/lib/init/init-d-script",
+    "/usr/lib/x86_64-linux-gnu/engines-3/afalg.so",
+    "/usr/lib/x86_64-linux-gnu/engines-3/loader_attic.so",
+    "/usr/lib/x86_64-linux-gnu/engines-3/padlock.so",
+    "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+    "/usr/lib/x86_64-linux-gnu/libBrokenLocale.so.1",
+    "/usr/lib/x86_64-linux-gnu/libLerc.so.4",
+    "/usr/lib/x86_64-linux-gnu/libSvtAv1Enc.so.1.4.1",
+    "/usr/lib/x86_64-linux-gnu/libabsl_bad_any_cast_impl.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_bad_optional_access.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_bad_variant_access.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_base.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_city.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_civil_time.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cord.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cord_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cordz_functions.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cordz_handle.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cordz_info.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_cordz_sample_token.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_debugging_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_demangle_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_examine_stack.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_exponential_biased.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_failure_signal_handler.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_config.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_marshalling.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_parse.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_private_handle_accessor.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_program_name.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_reflection.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_usage.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_flags_usage_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_graphcycles_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_hash.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_hashtablez_sampler.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_int128.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_leak_check.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_log_severity.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_low_level_hash.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_malloc_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_periodic_sampler.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_distributions.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_distribution_test_util.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_platform.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_pool_urbg.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_randen.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes_impl.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_randen_slow.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_internal_seed_material.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_seed_gen_exception.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_random_seed_sequences.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_raw_hash_set.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_raw_logging_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_scoped_set_env.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_spinlock_wait.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_stacktrace.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_status.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_statusor.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_str_format_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_strerror.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_strings.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_strings_internal.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_symbolize.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_synchronization.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_throw_delegate.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_time.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libabsl_time_zone.so.20220623.0.0",
+    "/usr/lib/x86_64-linux-gnu/libacl.so.1.1.2301",
+    "/usr/lib/x86_64-linux-gnu/libanl.so.1",
+    "/usr/lib/x86_64-linux-gnu/libaom.so.3.6.0",
+    "/usr/lib/x86_64-linux-gnu/libattr.so.1.1.2501",
+    "/usr/lib/x86_64-linux-gnu/libaudit.so.1.0.0",
+    "/usr/lib/x86_64-linux-gnu/libavif.so.15.0.1",
+    "/usr/lib/x86_64-linux-gnu/libbsd.so.0.11.7",
+    "/usr/lib/x86_64-linux-gnu/libbz2.so.1.0.4",
+    "/usr/lib/x86_64-linux-gnu/libc.so.6",
+    "/usr/lib/x86_64-linux-gnu/libc_malloc_debug.so.0",
+    "/usr/lib/x86_64-linux-gnu/libcap-ng.so.0.0.0",
+    "/usr/lib/x86_64-linux-gnu/libcap.so.2.66",
+    "/usr/lib/x86_64-linux-gnu/libcom_err.so.2.1",
+    "/usr/lib/x86_64-linux-gnu/libcrypt.so.1.1.0",
+    "/usr/lib/x86_64-linux-gnu/libcrypto.so.3",
+    "/usr/lib/x86_64-linux-gnu/libcurl.so.4.8.0",
+    "/usr/lib/x86_64-linux-gnu/libdav1d.so.6.6.0",
+    "/usr/lib/x86_64-linux-gnu/libde265.so.0.1.4",
+    "/usr/lib/x86_64-linux-gnu/libdl.so.2",
+    "/usr/lib/x86_64-linux-gnu/libdrop_ambient.so.0.0.0",
+    "/usr/lib/x86_64-linux-gnu/libe2p.so.2.3",
+    "/usr/lib/x86_64-linux-gnu/libedit.so.2.0.70",
+    "/usr/lib/x86_64-linux-gnu/libexpat.so.1.8.10",
+    "/usr/lib/x86_64-linux-gnu/libexpatw.so.1.8.10",
+    "/usr/lib/x86_64-linux-gnu/libext2fs.so.2.4",
+    "/usr/lib/x86_64-linux-gnu/libffi.so.8.1.2",
+    "/usr/lib/x86_64-linux-gnu/libfreetype.so.6.18.3",
+    "/usr/lib/x86_64-linux-gnu/libgav1.so.1.0.0",
+    "/usr/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/usr/lib/x86_64-linux-gnu/libgcrypt.so.20.4.1",
+    "/usr/lib/x86_64-linux-gnu/libgd.so.3.0.11",
+    "/usr/lib/x86_64-linux-gnu/libgnutls.so.30.34.3",
+    "/usr/lib/x86_64-linux-gnu/libgpg-error.so.0.33.1",
+    "/usr/lib/x86_64-linux-gnu/libheif.so.1.15.1",
+    "/usr/lib/x86_64-linux-gnu/libhogweed.so.6.6",
+    "/usr/lib/x86_64-linux-gnu/libicudata.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libicui18n.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libicuio.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libicutest.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libicutu.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libicuuc.so.72.1",
+    "/usr/lib/x86_64-linux-gnu/libidn2.so.0.3.8",
+    "/usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10",
+    "/usr/lib/x86_64-linux-gnu/liblber-2.5.so.0.1.8",
+    "/usr/lib/x86_64-linux-gnu/libldap-2.5.so.0.1.8",
+    "/usr/lib/x86_64-linux-gnu/liblz4.so.1.9.4",
+    "/usr/lib/x86_64-linux-gnu/liblzma.so.5.4.1",
+    "/usr/lib/x86_64-linux-gnu/libm.so.6",
+    "/usr/lib/x86_64-linux-gnu/libmd.so.0.0.5",
+    "/usr/lib/x86_64-linux-gnu/libmemusage.so",
+    "/usr/lib/x86_64-linux-gnu/libmvec.so.1",
+    "/usr/lib/x86_64-linux-gnu/libnettle.so.8.6",
+    "/usr/lib/x86_64-linux-gnu/libnghttp2.so.14.24.1",
+    "/usr/lib/x86_64-linux-gnu/libnsl.so.1",
+    "/usr/lib/x86_64-linux-gnu/libnss_compat.so.2",
+    "/usr/lib/x86_64-linux-gnu/libnss_dns.so.2",
+    "/usr/lib/x86_64-linux-gnu/libnss_files.so.2",
+    "/usr/lib/x86_64-linux-gnu/libnss_hesiod.so.2",
+    "/usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0",
+    "/usr/lib/x86_64-linux-gnu/libpam.so.0.85.1",
+    "/usr/lib/x86_64-linux-gnu/libpam_misc.so.0.82.1",
+    "/usr/lib/x86_64-linux-gnu/libpamc.so.0.82.1",
+    "/usr/lib/x86_64-linux-gnu/libpcprofile.so",
+    "/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.11.2",
+    "/usr/lib/x86_64-linux-gnu/libpng16.so.16.39.0",
+    "/usr/lib/x86_64-linux-gnu/libpsl.so.5.3.4",
+    "/usr/lib/x86_64-linux-gnu/libpsx.so.2.66",
+    "/usr/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/usr/lib/x86_64-linux-gnu/librav1e.so.0.5.1",
+    "/usr/lib/x86_64-linux-gnu/libresolv.so.2",
+    "/usr/lib/x86_64-linux-gnu/librt.so.1",
+    "/usr/lib/x86_64-linux-gnu/libseccomp.so.2.5.4",
+    "/usr/lib/x86_64-linux-gnu/libselinux.so.1",
+    "/usr/lib/x86_64-linux-gnu/libsemanage.so.2",
+    "/usr/lib/x86_64-linux-gnu/libsepol.so.2",
+    "/usr/lib/x86_64-linux-gnu/libss.so.2.0",
+    "/usr/lib/x86_64-linux-gnu/libssl.so.3",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30",
+    "/usr/lib/x86_64-linux-gnu/libsystemd.so.0.35.0",
+    "/usr/lib/x86_64-linux-gnu/libtasn1.so.6.6.3",
+    "/usr/lib/x86_64-linux-gnu/libthread_db.so.1",
+    "/usr/lib/x86_64-linux-gnu/libtic.so.6.4",
+    "/usr/lib/x86_64-linux-gnu/libtiff.so.6.0.0",
+    "/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4",
+    "/usr/lib/x86_64-linux-gnu/libudev.so.1.7.5",
+    "/usr/lib/x86_64-linux-gnu/libunistring.so.2.2.0",
+    "/usr/lib/x86_64-linux-gnu/libutil.so.1",
+    "/usr/lib/x86_64-linux-gnu/libwebp.so.7.1.5",
+    "/usr/lib/x86_64-linux-gnu/libx265.so.199",
+    "/usr/lib/x86_64-linux-gnu/libxml2.so.2.9.14",
+    "/usr/lib/x86_64-linux-gnu/libxslt.so.1.1.35",
+    "/usr/lib/x86_64-linux-gnu/libxxhash.so.0.8.1",
+    "/usr/lib/x86_64-linux-gnu/libyuv.so.0.0.1857",
+    "/usr/lib/x86_64-linux-gnu/libz.so.1.2.13",
+    "/usr/lib/x86_64-linux-gnu/libzstd.so.1.5.4",
+    "/usr/lib/x86_64-linux-gnu/ossl-modules/legacy.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_access.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_debug.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_deny.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_echo.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_env.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_exec.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_faildelay.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_faillock.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_filter.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_ftp.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_group.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_issue.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_keyinit.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_lastlog.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_limits.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_listfile.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_localuser.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_loginuid.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_mail.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_mkhomedir.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_motd.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_namespace.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_nologin.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_permit.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_pwhistory.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_rhosts.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_rootok.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_securetty.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_selinux.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_sepermit.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_setquota.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_shells.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_stress.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_succeed_if.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_time.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_timestamp.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_tty_audit.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_umask.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_unix.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_userdb.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_usertype.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_warn.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_wheel.so",
+    "/usr/lib/x86_64-linux-gnu/security/pam_xauth.so",
+    "/usr/libexec/dpkg/dpkg-db-backup",
+    "/usr/sbin/agetty",
+    "/usr/sbin/badblocks",
+    "/usr/sbin/blkdiscard",
+    "/usr/sbin/blkid",
+    "/usr/sbin/blkzone",
+    "/usr/sbin/blockdev",
+    "/usr/sbin/chcpu",
+    "/usr/sbin/ctrlaltdel",
+    "/usr/sbin/debugfs",
+    "/usr/sbin/dumpe2fs",
+    "/usr/sbin/e2fsck",
+    "/usr/sbin/e2image",
+    "/usr/sbin/e2scrub",
+    "/usr/sbin/e2scrub_all",
+    "/usr/sbin/e2undo",
+    "/usr/sbin/findfs",
+    "/usr/sbin/fsck",
+    "/usr/sbin/fsck.cramfs",
+    "/usr/sbin/fsck.minix",
+    "/usr/sbin/fsfreeze",
+    "/usr/sbin/fstab-decode",
+    "/usr/sbin/fstrim",
+    "/usr/sbin/hwclock",
+    "/usr/sbin/installkernel",
+    "/usr/sbin/isosize",
+    "/usr/sbin/killall5",
+    "/usr/sbin/ldconfig",
+    "/usr/sbin/logsave",
+    "/usr/sbin/losetup",
+    "/usr/sbin/mke2fs",
+    "/usr/sbin/mkfs",
+    "/usr/sbin/mkfs.bfs",
+    "/usr/sbin/mkfs.cramfs",
+    "/usr/sbin/mkfs.minix",
+    "/usr/sbin/mkhomedir_helper",
+    "/usr/sbin/mkswap",
+    "/usr/sbin/pam_namespace_helper",
+    "/usr/sbin/pivot_root",
+    "/usr/sbin/pwhistory_helper",
+    "/usr/sbin/resize2fs",
+    "/usr/sbin/runuser",
+    "/usr/sbin/shadowconfig",
+    "/usr/sbin/start-stop-daemon",
+    "/usr/sbin/sulogin",
+    "/usr/sbin/swaplabel",
+    "/usr/sbin/swapoff",
+    "/usr/sbin/swapon",
+    "/usr/sbin/switch_root",
+    "/usr/sbin/tune2fs",
+    "/usr/sbin/unix_chkpwd",
+    "/usr/sbin/unix_update",
+    "/usr/sbin/update-shells",
+    "/usr/sbin/wipefs",
+    "/usr/sbin/zramctl",
+    "/usr/share/libgcrypt20/clean-up-unmanaged-libraries",
+    "/var/lib/dpkg/info/adduser.preinst",
+    "/var/lib/dpkg/info/debianutils.prerm",
+    "/var/lib/dpkg/info/dpkg.postinst",
+    "/var/lib/dpkg/info/dpkg.prerm",
+    "/var/lib/dpkg/info/libgcrypt20:amd64.postinst",
+    "/var/lib/dpkg/info/tzdata.preinst",
+    "/var/lib/dpkg/info/tzdata.prerm",
+    "/var/lib/dpkg/info/usr-is-merged.postinst",
+    "/var/lib/dpkg/info/usr-is-merged.preinst",
+    "/var/lib/dpkg/info/util-linux-extra.postinst",
+    "/var/lib/dpkg/info/util-linux-extra.postrm",
+    "/var/lib/dpkg/info/util-linux-extra.preinst"
+  ],
+  "new_capabilities": [],
+  "entrypoint_changed": false,
+  "cmd_changed": false,
+  "user_changed": false,
+  "env_changes": {
+    "NGINX_VERSION": [
+      "1.24.0",
+      "1.25.5"
+    ],
+    "NJS_RELEASE": [
+      null,
+      "3~bookworm"
+    ],
+    "NJS_VERSION": [
+      "0.7.12",
+      "0.8.4"
+    ],
+    "PKG_RELEASE": [
+      "1~bullseye",
+      "1~bookworm"
+    ]
+  },
+  "total_risk_score": 11035,
+  "risk_level": "CRITICAL",
+  "packages": {
+    "added": [
+      "gcc-12-base",
+      "libabsl20220623",
+      "libaom3",
+      "libavif15",
+      "libcap2",
+      "libdav1d6",
+      "libde265-0",
+      "libedit2",
+      "libffi8",
+      "libgav1-1",
+      "libheif1",
+      "libicu72",
+      "libldap-2.5-0",
+      "liblerc4",
+      "libnuma1",
+      "librav1e0",
+      "libsemanage2",
+      "libsepol2",
+      "libssl3",
+      "libsvtav1enc1",
+      "libtiff6",
+      "libwebp7",
+      "libx265-199",
+      "libyuv0",
+      "usr-is-merged",
+      "util-linux-extra"
+    ],
+    "removed": [
+      "gcc-10-base",
+      "gcc-9-base",
+      "libffi7",
+      "libicu67",
+      "libldap-2.4-2",
+      "libnsl2",
+      "libpcre3",
+      "libreadline8",
+      "libsemanage1",
+      "libsepol1",
+      "libssl1.1",
+      "libtiff5",
+      "libtirpc-common",
+      "libtirpc3",
+      "libwebp6",
+      "lsb-base",
+      "readline-common",
+      "sensible-utils",
+      "ucf"
+    ],
+    "upgraded": [
+      {
+        "package": "adduser",
+        "from": "3.118+deb11u1",
+        "to": "3.134"
+      },
+      {
+        "package": "apt",
+        "from": "2.2.4",
+        "to": "2.6.1"
+      },
+      {
+        "package": "base-files",
+        "from": "11.1+deb11u9",
+        "to": "12.4+deb12u5"
+      },
+      {
+        "package": "base-passwd",
+        "from": "3.5.51",
+        "to": "3.6.1"
+      },
+      {
+        "package": "bash",
+        "from": "5.1-2+deb11u1",
+        "to": "5.2.15-2+b2"
+      },
+      {
+        "package": "bsdutils",
+        "from": "1:2.36.1-8+deb11u2",
+        "to": "1:2.38.1-5+deb12u1"
+      },
+      {
+        "package": "ca-certificates",
+        "from": "20210119",
+        "to": "20230311"
+      },
+      {
+        "package": "coreutils",
+        "from": "8.32-4+b1",
+        "to": "9.1-1"
+      },
+      {
+        "package": "curl",
+        "from": "7.74.0-1.3+deb11u11",
+        "to": "7.88.1-10+deb12u5"
+      },
+      {
+        "package": "dash",
+        "from": "0.5.11+git20200708+dd9ef66-5",
+        "to": "0.5.12-2"
+      },
+      {
+        "package": "debconf",
+        "from": "1.5.77",
+        "to": "1.5.82"
+      },
+      {
+        "package": "debian-archive-keyring",
+        "from": "2021.1.1+deb11u1",
+        "to": "2023.3+deb12u1"
+      },
+      {
+        "package": "debianutils",
+        "from": "4.11.2",
+        "to": "5.7-0.5~deb12u1"
+      },
+      {
+        "package": "diffutils",
+        "from": "1:3.7-5",
+        "to": "1:3.8-4"
+      },
+      {
+        "package": "dpkg",
+        "from": "1.20.13",
+        "to": "1.21.22"
+      },
+      {
+        "package": "e2fsprogs",
+        "from": "1.46.2-2",
+        "to": "1.47.0-2"
+      },
+      {
+        "package": "findutils",
+        "from": "4.8.0-1",
+        "to": "4.9.0-4"
+      },
+      {
+        "package": "fontconfig-config",
+        "from": "2.13.1-4.2",
+        "to": "2.14.1-4"
+      },
+      {
+        "package": "fonts-dejavu-core",
+        "from": "2.37-2",
+        "to": "2.37-6"
+      },
+      {
+        "package": "gettext-base",
+        "from": "0.21-4",
+        "to": "0.21-12"
+      },
+      {
+        "package": "gpgv",
+        "from": "2.2.27-2+deb11u2",
+        "to": "2.2.40-1.1"
+      },
+      {
+        "package": "grep",
+        "from": "3.6-1+deb11u1",
+        "to": "3.8-5"
+      },
+      {
+        "package": "gzip",
+        "from": "1.10-4+deb11u1",
+        "to": "1.12-1"
+      },
+      {
+        "package": "hostname",
+        "from": "3.23",
+        "to": "3.23+nmu1"
+      },
+      {
+        "package": "init-system-helpers",
+        "from": "1.60",
+        "to": "1.65.2"
+      },
+      {
+        "package": "libacl1",
+        "from": "2.2.53-10",
+        "to": "2.3.1-3"
+      },
+      {
+        "package": "libapt-pkg6.0",
+        "from": "2.2.4",
+        "to": "2.6.1"
+      },
+      {
+        "package": "libattr1",
+        "from": "1:2.4.48-6",
+        "to": "1:2.5.1-4"
+      },
+      {
+        "package": "libaudit-common",
+        "from": "1:3.0-2",
+        "to": "1:3.0.9-1"
+      },
+      {
+        "package": "libaudit1",
+        "from": "1:3.0-2",
+        "to": "1:3.0.9-1"
+      },
+      {
+        "package": "libblkid1",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "libbrotli1",
+        "from": "1.0.9-2+b2",
+        "to": "1.0.9-2+b6"
+      },
+      {
+        "package": "libbsd0",
+        "from": "0.11.3-1+deb11u1",
+        "to": "0.11.7-2"
+      },
+      {
+        "package": "libbz2-1.0",
+        "from": "1.0.8-4",
+        "to": "1.0.8-5+b1"
+      },
+      {
+        "package": "libc-bin",
+        "from": "2.31-13+deb11u8",
+        "to": "2.36-9+deb12u7"
+      },
+      {
+        "package": "libc6",
+        "from": "2.31-13+deb11u8",
+        "to": "2.36-9+deb12u7"
+      },
+      {
+        "package": "libcap-ng0",
+        "from": "0.7.9-2.2+b1",
+        "to": "0.8.3-1+b3"
+      },
+      {
+        "package": "libcom-err2",
+        "from": "1.46.2-2",
+        "to": "1.47.0-2"
+      },
+      {
+        "package": "libcrypt1",
+        "from": "1:4.4.18-4",
+        "to": "1:4.4.33-2"
+      },
+      {
+        "package": "libcurl4",
+        "from": "7.74.0-1.3+deb11u11",
+        "to": "7.88.1-10+deb12u5"
+      },
+      {
+        "package": "libdb5.3",
+        "from": "5.3.28+dfsg1-0.8",
+        "to": "5.3.28+dfsg2-1"
+      },
+      {
+        "package": "libdebconfclient0",
+        "from": "0.260",
+        "to": "0.270"
+      },
+      {
+        "package": "libdeflate0",
+        "from": "1.7-1",
+        "to": "1.14-1"
+      },
+      {
+        "package": "libexpat1",
+        "from": "2.2.10-2+deb11u5",
+        "to": "2.5.0-1"
+      },
+      {
+        "package": "libext2fs2",
+        "from": "1.46.2-2",
+        "to": "1.47.0-2"
+      },
+      {
+        "package": "libfontconfig1",
+        "from": "2.13.1-4.2",
+        "to": "2.14.1-4"
+      },
+      {
+        "package": "libfreetype6",
+        "from": "2.10.4+dfsg-1+deb11u1",
+        "to": "2.12.1+dfsg-5"
+      },
+      {
+        "package": "libgcc-s1",
+        "from": "10.2.1-6",
+        "to": "12.2.0-14"
+      },
+      {
+        "package": "libgcrypt20",
+        "from": "1.8.7-6",
+        "to": "1.10.1-3"
+      },
+      {
+        "package": "libgd3",
+        "from": "2.3.0-2",
+        "to": "2.3.3-9"
+      },
+      {
+        "package": "libgeoip1",
+        "from": "1.6.12-7",
+        "to": "1.6.12-10"
+      },
+      {
+        "package": "libgmp10",
+        "from": "2:6.2.1+dfsg-1+deb11u1",
+        "to": "2:6.2.1+dfsg1-1.1"
+      },
+      {
+        "package": "libgnutls30",
+        "from": "3.7.1-5+deb11u4",
+        "to": "3.7.9-2+deb12u2"
+      },
+      {
+        "package": "libgpg-error0",
+        "from": "1.38-2",
+        "to": "1.46-1"
+      },
+      {
+        "package": "libgssapi-krb5-2",
+        "from": "1.18.3-6+deb11u4",
+        "to": "1.20.1-2+deb12u1"
+      },
+      {
+        "package": "libhogweed6",
+        "from": "3.7.3-1",
+        "to": "3.8.1-2"
+      },
+      {
+        "package": "libidn2-0",
+        "from": "2.3.0-5",
+        "to": "2.3.3-1+b1"
+      },
+      {
+        "package": "libjbig0",
+        "from": "2.1-3.1+b2",
+        "to": "2.1-6.1"
+      },
+      {
+        "package": "libjpeg62-turbo",
+        "from": "1:2.0.6-4",
+        "to": "1:2.1.5-2"
+      },
+      {
+        "package": "libk5crypto3",
+        "from": "1.18.3-6+deb11u4",
+        "to": "1.20.1-2+deb12u1"
+      },
+      {
+        "package": "libkeyutils1",
+        "from": "1.6.1-2",
+        "to": "1.6.3-2"
+      },
+      {
+        "package": "libkrb5-3",
+        "from": "1.18.3-6+deb11u4",
+        "to": "1.20.1-2+deb12u1"
+      },
+      {
+        "package": "libkrb5support0",
+        "from": "1.18.3-6+deb11u4",
+        "to": "1.20.1-2+deb12u1"
+      },
+      {
+        "package": "liblz4-1",
+        "from": "1.9.3-2",
+        "to": "1.9.4-1"
+      },
+      {
+        "package": "liblzma5",
+        "from": "5.2.5-2.1~deb11u1",
+        "to": "5.4.1-0.2"
+      },
+      {
+        "package": "libmd0",
+        "from": "1.0.3-3",
+        "to": "1.0.4-2"
+      },
+      {
+        "package": "libmount1",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "libnettle8",
+        "from": "3.7.3-1",
+        "to": "3.8.1-2"
+      },
+      {
+        "package": "libnghttp2-14",
+        "from": "1.43.0-1+deb11u1",
+        "to": "1.52.0-1+deb12u1"
+      },
+      {
+        "package": "libp11-kit0",
+        "from": "0.23.22-1",
+        "to": "0.24.1-2"
+      },
+      {
+        "package": "libpam-modules",
+        "from": "1.4.0-9+deb11u1",
+        "to": "1.5.2-6+deb12u1"
+      },
+      {
+        "package": "libpam-modules-bin",
+        "from": "1.4.0-9+deb11u1",
+        "to": "1.5.2-6+deb12u1"
+      },
+      {
+        "package": "libpam-runtime",
+        "from": "1.4.0-9+deb11u1",
+        "to": "1.5.2-6+deb12u1"
+      },
+      {
+        "package": "libpam0g",
+        "from": "1.4.0-9+deb11u1",
+        "to": "1.5.2-6+deb12u1"
+      },
+      {
+        "package": "libpcre2-8-0",
+        "from": "10.36-2+deb11u1",
+        "to": "10.42-1"
+      },
+      {
+        "package": "libpng16-16",
+        "from": "1.6.37-3",
+        "to": "1.6.39-2"
+      },
+      {
+        "package": "libpsl5",
+        "from": "0.21.0-1.2",
+        "to": "0.21.2-1"
+      },
+      {
+        "package": "libsasl2-2",
+        "from": "2.1.27+dfsg-2.1+deb11u1",
+        "to": "2.1.28+dfsg-10"
+      },
+      {
+        "package": "libsasl2-modules-db",
+        "from": "2.1.27+dfsg-2.1+deb11u1",
+        "to": "2.1.28+dfsg-10"
+      },
+      {
+        "package": "libseccomp2",
+        "from": "2.5.1-1+deb11u1",
+        "to": "2.5.4-1+b3"
+      },
+      {
+        "package": "libselinux1",
+        "from": "3.1-3",
+        "to": "3.4-1+b6"
+      },
+      {
+        "package": "libsemanage-common",
+        "from": "3.1-1",
+        "to": "3.4-1"
+      },
+      {
+        "package": "libsmartcols1",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "libss2",
+        "from": "1.46.2-2",
+        "to": "1.47.0-2"
+      },
+      {
+        "package": "libssh2-1",
+        "from": "1.9.0-2",
+        "to": "1.10.0-3+b1"
+      },
+      {
+        "package": "libstdc++6",
+        "from": "10.2.1-6",
+        "to": "12.2.0-14"
+      },
+      {
+        "package": "libsystemd0",
+        "from": "247.3-7+deb11u4",
+        "to": "252.22-1~deb12u1"
+      },
+      {
+        "package": "libtasn1-6",
+        "from": "4.16.0-2+deb11u1",
+        "to": "4.19.0-2"
+      },
+      {
+        "package": "libtinfo6",
+        "from": "6.2+20201114-2+deb11u2",
+        "to": "6.4-4"
+      },
+      {
+        "package": "libudev1",
+        "from": "247.3-7+deb11u4",
+        "to": "252.22-1~deb12u1"
+      },
+      {
+        "package": "libunistring2",
+        "from": "0.9.10-4",
+        "to": "1.0-2"
+      },
+      {
+        "package": "libuuid1",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "libx11-6",
+        "from": "2:1.7.2-1+deb11u2",
+        "to": "2:1.8.4-2+deb12u2"
+      },
+      {
+        "package": "libx11-data",
+        "from": "2:1.7.2-1+deb11u2",
+        "to": "2:1.8.4-2+deb12u2"
+      },
+      {
+        "package": "libxcb1",
+        "from": "1.14-3",
+        "to": "1.15-1"
+      },
+      {
+        "package": "libxml2",
+        "from": "2.9.10+dfsg-6.7+deb11u4",
+        "to": "2.9.14+dfsg-1.3~deb12u1"
+      },
+      {
+        "package": "libxpm4",
+        "from": "1:3.5.12-1.1+deb11u1",
+        "to": "1:3.5.12-1.1+deb12u1"
+      },
+      {
+        "package": "libxslt1.1",
+        "from": "1.1.34-4+deb11u1",
+        "to": "1.1.35-1"
+      },
+      {
+        "package": "libxxhash0",
+        "from": "0.8.0-2",
+        "to": "0.8.1-1"
+      },
+      {
+        "package": "libzstd1",
+        "from": "1.4.8+dfsg-2.1",
+        "to": "1.5.4+dfsg2-5"
+      },
+      {
+        "package": "login",
+        "from": "1:4.8.1-1",
+        "to": "1:4.13+dfsg1-1+b1"
+      },
+      {
+        "package": "logsave",
+        "from": "1.46.2-2",
+        "to": "1.47.0-2"
+      },
+      {
+        "package": "mawk",
+        "from": "1.3.4.20200120-2",
+        "to": "1.3.4.20200120-3.1"
+      },
+      {
+        "package": "mount",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "ncurses-base",
+        "from": "6.2+20201114-2+deb11u2",
+        "to": "6.4-4"
+      },
+      {
+        "package": "ncurses-bin",
+        "from": "6.2+20201114-2+deb11u2",
+        "to": "6.4-4"
+      },
+      {
+        "package": "nginx",
+        "from": "1.24.0-1~bullseye",
+        "to": "1.25.5-1~bookworm"
+      },
+      {
+        "package": "nginx-module-geoip",
+        "from": "1.24.0-1~bullseye",
+        "to": "1.25.5-1~bookworm"
+      },
+      {
+        "package": "nginx-module-image-filter",
+        "from": "1.24.0-1~bullseye",
+        "to": "1.25.5-1~bookworm"
+      },
+      {
+        "package": "nginx-module-njs",
+        "from": "1.24.0+0.7.12-1~bullseye",
+        "to": "1.25.5+0.8.4-3~bookworm"
+      },
+      {
+        "package": "nginx-module-xslt",
+        "from": "1.24.0-1~bullseye",
+        "to": "1.25.5-1~bookworm"
+      },
+      {
+        "package": "openssl",
+        "from": "1.1.1w-0+deb11u1",
+        "to": "3.0.11-1~deb12u2"
+      },
+      {
+        "package": "passwd",
+        "from": "1:4.8.1-1",
+        "to": "1:4.13+dfsg1-1+b1"
+      },
+      {
+        "package": "perl-base",
+        "from": "5.32.1-4+deb11u3",
+        "to": "5.36.0-7+deb12u1"
+      },
+      {
+        "package": "sed",
+        "from": "4.7-1",
+        "to": "4.9-1"
+      },
+      {
+        "package": "sysvinit-utils",
+        "from": "2.96-7+deb11u1",
+        "to": "3.06-4"
+      },
+      {
+        "package": "tar",
+        "from": "1.34+dfsg-1+deb11u1",
+        "to": "1.34+dfsg-1.2+deb12u1"
+      },
+      {
+        "package": "tzdata",
+        "from": "2024a-0+deb11u1",
+        "to": "2024a-0+deb12u1"
+      },
+      {
+        "package": "util-linux",
+        "from": "2.36.1-8+deb11u2",
+        "to": "2.38.1-5+deb12u1"
+      },
+      {
+        "package": "zlib1g",
+        "from": "1:1.2.11.dfsg-2+deb11u2",
+        "to": "1:1.2.13.dfsg-1"
+      }
+    ],
+    "counts": {
+      "added": 26,
+      "removed": 19,
+      "upgraded": 120
+    }
+  },
+  "package_format": "dpkg",
+  "changes": [
+    {
+      "path": "/usr/bin/mount",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 59704,
+      "sha256_old": null,
+      "sha256_new": "83e4e0e5b9317f9a1e87790c923bf92120d89e2b05baae78c54c100c75563488",
+      "risk_score": 65,
+      "risk_factors": [
+        "new_binary",
+        "setuid",
+        "dangerous_binary:mount"
+      ]
+    },
+    {
+      "path": "/usr/bin/su",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 72000,
+      "sha256_old": null,
+      "sha256_new": "ed1a03d554b7fa006a5b4f6c5d5557411d5f7269cc1cb731e72876d23b0b4d0d",
+      "risk_score": 65,
+      "risk_factors": [
+        "new_binary",
+        "setuid"
+      ]
+    },
+    {
+      "path": "/usr/bin/umount",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 35128,
+      "sha256_old": null,
+      "sha256_new": "8f55da36d5a2b69651300e505fec06aa17de2ac184809c68fc786311a7c2cec2",
+      "risk_score": 65,
+      "risk_factors": [
+        "new_binary",
+        "setuid",
+        "dangerous_binary:umount"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/ANF_Secure_Server_Root_CA.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/ANF_Secure_Server_Root_CA.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068_2.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068_2.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Certainly_Root_E1.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Certainly_Root_E1.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Certainly_Root_R1.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Certainly_Root_R1.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Certum_EC-384_CA.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Certum_EC-384_CA.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Certum_Trusted_Root_CA.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Certum_Trusted_Root_CA.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/D-TRUST_BR_Root_CA_1_2020.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/D-TRUST_BR_Root_CA_1_2020.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/D-TRUST_EV_Root_CA_1_2020.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/D-TRUST_EV_Root_CA_1_2020.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/DigiCert_TLS_ECC_P384_Root_G5.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/DigiCert_TLS_ECC_P384_Root_G5.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/DigiCert_TLS_RSA4096_Root_G5.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/DigiCert_TLS_RSA4096_Root_G5.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/E-Tugra_Global_Root_CA_ECC_v3.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/E-Tugra_Global_Root_CA_ECC_v3.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/E-Tugra_Global_Root_CA_RSA_v3.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/E-Tugra_Global_Root_CA_RSA_v3.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/GLOBALTRUST_2020.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/GLOBALTRUST_2020.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/GlobalSign_Root_E46.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/GlobalSign_Root_E46.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/GlobalSign_Root_R46.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/GlobalSign_Root_R46.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/HARICA_TLS_ECC_Root_CA_2021.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/HARICA_TLS_ECC_Root_CA_2021.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/HARICA_TLS_RSA_Root_CA_2021.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/HARICA_TLS_RSA_Root_CA_2021.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/HiPKI_Root_CA_-_G1.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/HiPKI_Root_CA_-_G1.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/ISRG_Root_X2.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/ISRG_Root_X2.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Security_Communication_ECC_RootCA1.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Security_Communication_ECC_RootCA1.crt"
+      ]
+    },
+    {
+      "path": "/etc/ssl/certs/Security_Communication_RootCA3.pem",
+      "change_type": "added",
+      "size_old": 0,
+      "size_new": 0,
+      "sha256_old": null,
+      "sha256_new": null,
+      "risk_score": 30,
+      "risk_factors": [
+        "certificate_key",
+        "symlink:/usr/share/ca-certificates/mozilla/Security_Communication_RootCA3.crt"
+      ]
+    }
+  ],
+  "changes_truncated_from": 433
+}

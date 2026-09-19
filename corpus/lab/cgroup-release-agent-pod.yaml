@@ -1,0 +1,32 @@
+# cgroup release_agent escape pod — validates the release_agent technique: a
+# privileged container with a writable /sys/fs/cgroup mount sets release_agent
+# plus notify_on_release on a cgroup, then moves a process in/out of it to make
+# the kernel run the command *on the host* as root.
+# Requires cgroup v1 semantics (or a v2 host with the cgroup-release-agent
+# fallback); record the host cgroup version with the finding.
+# FOR ISOLATED LAB USE ONLY.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cgroup-release-agent-pod
+  namespace: vulnerable
+spec:
+  hostPID: true
+  containers:
+    - name: cgroup-escape
+      image: ubuntu:24.04
+      command: ["sleep", "infinity"]
+      securityContext:
+        privileged: true
+        capabilities:
+          add:
+            - SYS_ADMIN
+            - SYS_CHROOT
+            - DAC_OVERRIDE
+      volumeMounts:
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+  volumes:
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup

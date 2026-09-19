@@ -7,3 +7,22 @@ build/
 .venv/
 venv/
 *.tmp
+
+# Coverage output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# MkDocs build output
+/site/
+
+# docs/ pages are GENERATED from the canonical repo files by
+# scripts/build_docs.py (run before mkdocs build). roadmap.md is hand-written.
+/docs/*.md
+/docs/techniques/
+!/docs/roadmap.md
+
+# Scratch output from local verification runs
+/tmp/
+*.local.json

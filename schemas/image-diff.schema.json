@@ -42,6 +42,35 @@
       }
     },
     "total_risk_score": { "type": "integer", "minimum": 0 },
-    "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] }
+    "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "package_format": { "type": ["string", "null"], "enum": ["dpkg", "apk", null] },
+    "packages": {
+      "type": "object",
+      "properties": {
+        "added": { "type": "array", "items": { "type": "string" } },
+        "removed": { "type": "array", "items": { "type": "string" } },
+        "upgraded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["package", "from", "to"],
+            "properties": {
+              "package": { "type": "string" },
+              "from": { "type": "string" },
+              "to": { "type": "string" }
+            }
+          }
+        },
+        "counts": {
+          "type": "object",
+          "required": ["added", "removed", "upgraded"],
+          "properties": {
+            "added": { "type": "integer", "minimum": 0 },
+            "removed": { "type": "integer", "minimum": 0 },
+            "upgraded": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
   }
 }

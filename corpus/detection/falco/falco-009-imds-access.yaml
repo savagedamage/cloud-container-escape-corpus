@@ -1,0 +1,12 @@
+# IMDS credential access — CE-011
+- rule: Cloud Instance Metadata Credential Access
+  desc: Detect container processes connecting to or requesting the instance metadata service credential surface.
+  condition: >
+    container.id != host and
+    (evt.type in (connect, execve, sendto) and
+     (fd.sip = "169.254.169.254" or fd.sip = "fd00:ec2::254" or
+      proc.cmdline contains "169.254.169.254" or proc.cmdline contains "fd00:ec2::254" or
+      proc.cmdline contains "/latest/meta-data/" or proc.cmdline contains "iam/security-credentials"))
+  output: IMDS credential access (proc=%proc.name cmdline=%proc.cmdline container=%container.name)
+  priority: CRITICAL
+  tags: [container, cloud, imds, credential-access, mitre_t1552_005]

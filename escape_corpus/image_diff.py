@@ -20,14 +20,14 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import tarfile
 import tempfile
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
-import re
 
 
 @dataclass
@@ -58,6 +58,10 @@ class ImageDiffResult:
     env_changes: Dict[str, List[Optional[str]]]
     total_risk_score: int
     risk_level: str  # LOW, MEDIUM, HIGH, CRITICAL
+    # Package-level view of the same delta (dpkg/apk inventories). Empty when the
+    # images carry a package database this tool does not parse.
+    packages: Dict = field(default_factory=dict)
+    package_format: Optional[str] = None
 
 
 RISK_WEIGHTS = {
@@ -517,12 +521,21 @@ def main():
         config_new = get_image_config(args.new_image)
 
         print("[*] Flattening old image ...")
-        old_flat, old_layers, _ = flatten_image_tar(old_tar, tmp / "old")
+        old_flat, old_layers, old_merge_dir = flatten_image_tar(old_tar, tmp / "old")
         print(f"    {len(old_flat)} files across {len(old_layers)} layers")
 
         print("[*] Flattening new image ...")
         new_flat, new_layers, new_merge_dir = flatten_image_tar(new_tar, tmp / "new")
         print(f"    {len(new_flat)} files across {len(new_layers)} layers")
+
+        print("[*] Computing package delta ...")
+        from .packages import diff_packages, inventory_from_merge, summarise
+        old_pkgs, old_fmt = inventory_from_merge(old_merge_dir, old_flat)
+        new_pkgs, new_fmt = inventory_from_merge(new_merge_dir, new_flat)
+        pkg_delta = diff_packages(old_pkgs, new_pkgs) if (old_pkgs or new_pkgs) else {}
+        pkg_fmt = new_fmt or old_fmt
+        print(f"    {summarise(pkg_delta, pkg_fmt)}" if pkg_delta
+              else "    Package inventory: unavailable (no dpkg/apk database in either image)")
 
         print("[*] Computing filesystem delta ...")
         changes, new_binaries, new_capabilities = diff_filesystems(old_flat, new_flat, new_merge_dir)
@@ -564,6 +577,8 @@ def main():
             env_changes=env_changes,
             total_risk_score=risk_score,
             risk_level=compute_risk_level(risk_score),
+            packages=pkg_delta,
+            package_format=pkg_fmt,
         )
 
         output = asdict(result)
@@ -572,7 +587,7 @@ def main():
                 json.dump(output, f, indent=2)
             print(f"\n[+] Results written to {args.output}")
 
-        print(f"\n=== Image Diff Report ===")
+        print("\n=== Image Diff Report ===")
         print(f"{args.old_image} -> {args.new_image}")
         print(f"Files: +{files_added} -{files_removed} ~{files_modified}")
         print(f"New binaries: {len(new_binaries)} | New file capabilities: {len(new_capabilities)}")

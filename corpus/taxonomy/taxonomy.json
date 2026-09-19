@@ -132,6 +132,32 @@
       "guide": "techniques/CE-010-capability-chains.md",
       "detection_rule_ids": ["SIGMA-007", "SIGMA-008", "FALCO-007"],
       "references": ["https://man7.org/linux/man-pages/man7/capabilities.7.html"]
+    },
+    {
+      "id": "CE-011",
+      "name": "IMDS instance metadata credential theft",
+      "category": "cloud/metadata",
+      "aliases": ["IMDS credential theft", "169.254.169.254 SSRF", "node role theft"],
+      "summary": "Read the instance metadata service (169.254.169.254 / fd00:ec2::254) from a workload to steal the node's cloud role credentials, user-data bootstrap secrets, and network layout — the cloud half of the escape.",
+      "mitre_attack": ["T1552.005", "T1078.004", "T1530"],
+      "risk": {"prevalence": "high", "impact": "critical", "detectability": "medium", "overall": "critical"},
+      "prerequisites": ["egress from the container to the metadata address", "IMDSv1 enabled or IMDSv2 token endpoint reachable", "cloud role attached to the node/instance", "CNI or NetworkPolicy that does not filter link-local traffic"],
+      "guide": "techniques/CE-011-imds-instance-metadata-theft.md",
+      "detection_rule_ids": ["SIGMA-012", "FALCO-009"],
+      "references": ["https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html", "https://attack.mitre.org/techniques/T1552/005/"]
+    },
+    {
+      "id": "CE-012",
+      "name": "Workload identity token theft",
+      "category": "cloud/identity",
+      "aliases": ["IRSA token theft", "projected service account token", "workload identity federation abuse"],
+      "summary": "Steal the projected service-account JWT that federates a workload to cloud identity (IRSA, GKE and Azure Workload Identity) and exchange it — from inside or outside the cluster — for cloud credentials for the token's lifetime.",
+      "mitre_attack": ["T1528", "T1550.001", "T1078.004"],
+      "risk": {"prevalence": "medium", "impact": "critical", "detectability": "low", "overall": "high"},
+      "prerequisites": ["read access to the projected token file or its env var pointer", "service account bound to a cloud role (IRSA / workload identity)", "egress to the cloud token/STS endpoint", "cluster OIDC issuer reachable for the out-of-cluster exchange"],
+      "guide": "techniques/CE-012-workload-identity-token-theft.md",
+      "detection_rule_ids": ["SIGMA-013", "FALCO-010"],
+      "references": ["https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html", "https://azure.github.io/azure-workload-identity/docs/", "https://attack.mitre.org/techniques/T1528/"]
     }
   ],
   "detection_rules": {
@@ -146,6 +172,8 @@
     "SIGMA-009": {"title": "chroot into host root", "file": "detection/sigma/sigma-009-chroot-host.yml"},
     "SIGMA-010": {"title": "privileged pod creation (k8s audit)", "file": "detection/sigma/sigma-010-privileged-pod.yml"},
     "SIGMA-011": {"title": "io_uring registration abuse", "file": "detection/sigma/sigma-011-io-uring.yml"},
+    "SIGMA-012": {"title": "cloud instance metadata (IMDS) credential theft", "file": "detection/sigma/sigma-012-imds-credential-theft.yml"},
+    "SIGMA-013": {"title": "projected workload identity token access", "file": "detection/sigma/sigma-013-workload-identity-token-theft.yml"},
     "FALCO-001": {"title": "cgroup release_agent write", "file": "detection/falco/falco-001-cgroup-release-agent.yaml"},
     "FALCO-002": {"title": "pidfd_getfd syscall", "file": "detection/falco/falco-002-pidfd-getfd.yaml"},
     "FALCO-003": {"title": "nsenter namespace escape", "file": "detection/falco/falco-003-nsenter.yaml"},
@@ -153,6 +181,8 @@
     "FALCO-005": {"title": "runc binary overwrite", "file": "detection/falco/falco-005-runc-overwrite.yaml"},
     "FALCO-006": {"title": "eBPF program load", "file": "detection/falco/falco-006-bpf-load.yaml"},
     "FALCO-007": {"title": "kernel module load", "file": "detection/falco/falco-007-kernel-module.yaml"},
-    "FALCO-008": {"title": "sensitive host path mount", "file": "detection/falco/falco-008-host-mount.yaml"}
+    "FALCO-008": {"title": "sensitive host path mount", "file": "detection/falco/falco-008-host-mount.yaml"},
+    "FALCO-009": {"title": "cloud instance metadata credential access", "file": "detection/falco/falco-009-imds-access.yaml"},
+    "FALCO-010": {"title": "projected workload identity token read", "file": "detection/falco/falco-010-workload-identity-token.yaml"}
   }
 }

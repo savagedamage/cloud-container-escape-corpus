@@ -19,9 +19,8 @@ import signal
 import subprocess
 import sys
 import time
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 
@@ -329,6 +328,7 @@ class RuntimeBaseline:
             if len(parts) < 2:
                 continue
             source, target = parts[0], parts[1]
+            fstype = parts[2] if len(parts) > 2 else ""
 
             if "/var/run/docker.sock" in source:
                 docker_sock = True
@@ -344,10 +344,14 @@ class RuntimeBaseline:
             if target == "/host" or target == "/hostfs" or target.startswith("/host/") or target.startswith("/hostfs/"):
                 host_root = True
                 sensitive_mounts.append(f"host_path:{target}")
-            if source == "proc" and target != "/proc":
+            # Classify by FILESYSTEM TYPE, not source: the container's own
+            # /proc mounts as `proc /proc proc`, while a host /proc bind-mounted
+            # elsewhere reads `/proc /host/proc proc`. Keying on the source
+            # field missed every bind-mounted host proc/sys.
+            if fstype == "proc" and target != "/proc":
                 host_proc = True
                 sensitive_mounts.append(f"host_proc:{target}")
-            if source == "sysfs" and target != "/sys":
+            if fstype in ("sysfs", "sysfs_boot") and target != "/sys":
                 host_sys = True
                 sensitive_mounts.append(f"host_sys:{target}")
 
@@ -513,7 +517,8 @@ class DriftDetector:
             findings.append({
                 "level": "CRITICAL",
                 "category": "integrity",
-                "description": f"Hash chain broken: previous={str(current.previous_hash)[:16]}... expected={self.baseline.hash_chain[:16]}...",
+                "description": f"Hash chain broken: previous={str(current.previous_hash)[:16]}... "
+                               f"expected={self.baseline.hash_chain[:16]}...",
                 "remediation": "Integrity violation detected in runtime state chain"
             })
 

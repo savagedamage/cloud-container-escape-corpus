@@ -67,51 +67,75 @@ rules:
     file: sigma/sigma-011-io-uring.yml
     detects: [CE-008]
     level: medium
+  - id: SIGMA-012
+    engine: sigma
+    title: Cloud Instance Metadata (IMDS) Credential Theft
+    file: sigma/sigma-012-imds-credential-theft.yml
+    detects: [CE-011]
+    level: high
+  - id: SIGMA-013
+    engine: sigma
+    title: Projected Workload Identity Token Access
+    file: sigma/sigma-013-workload-identity-token-theft.yml
+    detects: [CE-012]
+    level: high
   - id: FALCO-001
     engine: falco
     title: cgroup release_agent Write
     file: falco/falco-001-cgroup-release-agent.yaml
     detects: [CE-001]
-    level: CRITICAL
+    level: critical
   - id: FALCO-002
     engine: falco
     title: pidfd_getfd Syscall
     file: falco/falco-002-pidfd-getfd.yaml
     detects: [CE-002]
-    level: WARNING
+    level: high
   - id: FALCO-003
     engine: falco
     title: nsenter Namespace Escape
     file: falco/falco-003-nsenter.yaml
     detects: [CE-007, CE-009]
-    level: CRITICAL
+    level: critical
   - id: FALCO-004
     engine: falco
     title: Container Created via Runtime Socket
     file: falco/falco-004-runtime-socket.yaml
     detects: [CE-004]
-    level: CRITICAL
+    level: critical
   - id: FALCO-005
     engine: falco
     title: runc proc_self_exe Overwrite
     file: falco/falco-005-runc-overwrite.yaml
     detects: [CE-005]
-    level: CRITICAL
+    level: critical
   - id: FALCO-006
     engine: falco
     title: eBPF Program Load
     file: falco/falco-006-bpf-load.yaml
     detects: [CE-006]
-    level: WARNING
+    level: high
   - id: FALCO-007
     engine: falco
     title: Kernel Module Load
     file: falco/falco-007-kernel-module.yaml
     detects: [CE-010]
-    level: CRITICAL
+    level: critical
   - id: FALCO-008
     engine: falco
     title: Sensitive Host Path Mount
     file: falco/falco-008-host-mount.yaml
     detects: [CE-007]
-    level: HIGH
+    level: high
+  - id: FALCO-009
+    engine: falco
+    title: Cloud Instance Metadata Credential Access
+    file: falco/falco-009-imds-access.yaml
+    detects: [CE-011]
+    level: critical
+  - id: FALCO-010
+    engine: falco
+    title: Projected Workload Identity Token Read
+    file: falco/falco-010-workload-identity-token.yaml
+    detects: [CE-012]
+    level: high

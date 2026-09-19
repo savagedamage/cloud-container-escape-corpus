@@ -1,0 +1,12 @@
+# Projected workload identity token read — CE-012
+- rule: Projected Workload Identity Token Read
+  desc: Detect container processes opening projected cloud workload-identity service account token files.
+  condition: >
+    evt.type in (open, openat, openat2, read) and container.id != host and
+    (fd.name startswith "/var/run/secrets/kubernetes.io/serviceaccount/token" or
+     fd.name startswith "/var/run/secrets/eks.amazonaws.com/serviceaccount" or
+     fd.name startswith "/var/run/secrets/azure/" or
+     fd.name contains "azure-identity-token")
+  output: workload identity token read (file=%fd.name proc=%proc.name cmdline=%proc.cmdline container=%container.name)
+  priority: WARNING
+  tags: [container, cloud, workload-identity, credential-access, mitre_t1528]

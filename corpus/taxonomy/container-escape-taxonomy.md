@@ -24,6 +24,8 @@ technique has a full playbook under [`../techniques/`](../techniques/).
 | CE-008 | Kernel exploit via syscall exposure | kernel/syscalls | T1068, T1611 | HIGH | [playbook](../techniques/CE-008-kernel-syscall-exploit.md) | SIGMA-011 |
 | CE-009 | Namespace escape via /proc/self/ns | kernel/namespaces | T1611 | MEDIUM | [playbook](../techniques/CE-009-namespace-escape.md) | SIGMA-003, FALCO-003 |
 | CE-010 | Capability-based escape chains | kernel/capabilities | T1611, T1068 | HIGH | [playbook](../techniques/CE-010-capability-chains.md) | SIGMA-007, SIGMA-008, FALCO-007 |
+| CE-011 | IMDS instance metadata credential theft | cloud/metadata | T1552.005, T1078.004, T1530 | CRITICAL | [playbook](../techniques/CE-011-imds-instance-metadata-theft.md) | SIGMA-012, FALCO-009 |
+| CE-012 | Workload identity token theft | cloud/identity | T1528, T1550.001, T1078.004 | HIGH | [playbook](../techniques/CE-012-workload-identity-token-theft.md) | SIGMA-013, FALCO-010 |
 
 ## Risk scoring
 
@@ -51,6 +53,11 @@ catches it), and **overall** (weighted roll-up):
 | T1040 (Network Sniffing) | CE-006 |
 | T1556.002 (Password Filter) | CE-006 |
 | T1005 (Data from Local System) | CE-007 |
+| T1552.005 (Cloud Instance Metadata API) | CE-011 |
+| T1078.004 (Valid Accounts: Cloud Accounts) | CE-011, CE-012 |
+| T1530 (Data from Cloud Storage) | CE-011 |
+| T1528 (Steal Application Access Token) | CE-012 |
+| T1550.001 (Use Alternate Authentication Material: Application Access Token) | CE-012 |
 
 ## Detection coverage
 
@@ -66,14 +73,25 @@ catches it), and **overall** (weighted roll-up):
 | CE-008 | ✓ | — | — |
 | CE-009 | ✓ | ✓ | hostpath-proc-pod.yaml |
 | CE-010 | ✓ (2 rules) | ✓ | privileged-escape-pod.yaml |
+| CE-011 | ✓ | ✓ | — |
+| CE-012 | ✓ | ✓ | — |
 
 Gaps (no Falco coverage): CE-003, CE-008 — by design: RBAC escalation is best
 caught in Kubernetes audit logs (SIGMA-010), and kernel syscall exploitation is
 best caught by seccomp notify + kernel patch management rather than runtime rules.
 
+CE-011 and CE-012 are the cloud half of the taxonomy: they do not escape the
+container, they escape the *identity boundary* the pod inherits from the node or
+its federated service account. Neither has a lab manifest in this corpus — both
+need a real cloud account behind the lab VM, which this corpus deliberately does
+not ship. Their runtime signatures are also weaker than the kernel-half
+techniques (an IMDS read is one `connect`; a token read is one `open`), so the
+durable controls are cloud-side: IMDSv2 with hop limit 1, egress filtering, and
+short audience-scoped projected tokens.
+
 ## References
 
-- MITRE ATT&CK: T1611, T1068, T1055, T1078, T1525, T1190, T1005, T1040, T1556.002
+- MITRE ATT&CK: T1611, T1068, T1055, T1078, T1525, T1190, T1005, T1040, T1556.002, T1552.005, T1078.004, T1530, T1528, T1550.001
 - NIST SP 800-190 (Application Container Security Guide)
 - Kubernetes Threat Matrix (Microsoft)
 - Container Escape Demystified (Felix Wilhelm, Google CTF)

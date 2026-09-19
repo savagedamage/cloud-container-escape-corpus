@@ -1,0 +1,41 @@
+title: Projected Workload Identity Token Access
+id: 1c0f5c0e-0f0b-4b3c-8a1d-000000000013
+status: stable
+description: Detects reads of projected workload-identity service account tokens and the federated-token environment variables used to locate them (IRSA, GKE Workload Identity, Azure Workload Identity) — cloud identity theft from a workload (CE-012).
+references:
+  - https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+  - https://azure.github.io/azure-workload-identity/docs/
+  - https://attack.mitre.org/techniques/T1528/
+author: cloud-container-escape-corpus
+date: 2026-09-20
+tags:
+  - attack.credential-access
+  - attack.t1528
+  - attack.t1550.001
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_token_paths:
+    CommandLine|contains:
+      - '/var/run/secrets/kubernetes.io/serviceaccount/token'
+      - '/var/run/secrets/eks.amazonaws.com/serviceaccount'
+      - '/var/run/secrets/azure/tokens/'
+      - '/var/run/secrets/azure-identity-token'
+  selection_federated_env:
+    CommandLine|contains:
+      - 'AWS_WEB_IDENTITY_TOKEN_FILE'
+      - 'AZURE_FEDERATED_TOKEN_FILE'
+      - 'AWS_ROLE_ARN'
+  selection_reader_tools:
+    Image|endswith:
+      - '/cat'
+      - '/base64'
+      - '/env'
+      - '/printenv'
+      - '/tar'
+  condition: (selection_token_paths or selection_federated_env) and selection_reader_tools
+falsepositives:
+  - Cloud SDKs and credential helper chains that read their own token file (aws-cli, azure-identity, gcloud) inside the workload they belong to
+  - Debugging sessions and init containers that legitimately inspect the projected volume
+level: high

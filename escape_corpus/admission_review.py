@@ -14,10 +14,10 @@ import argparse
 import json
 import re
 import sys
+from dataclasses import asdict, dataclass
+from typing import List, Optional
+
 import yaml
-from dataclasses import dataclass, asdict, field
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 @dataclass
@@ -99,7 +99,8 @@ BUILTIN_CHECKS = {
     "dangerous_capabilities": {
         "severity": "HIGH",
         "description": "Container has dangerous capabilities added",
-        "remediation": "Remove dangerous capabilities (SYS_ADMIN, SYS_PTRACE, SYS_MODULE, NET_ADMIN, NET_RAW, BPF, PERFMON, DAC_OVERRIDE, DAC_READ_SEARCH, SETUID, SETGID)",
+        "remediation": "Remove dangerous capabilities (SYS_ADMIN, SYS_PTRACE, SYS_MODULE, "
+                       "NET_ADMIN, NET_RAW, BPF, PERFMON, DAC_OVERRIDE, DAC_READ_SEARCH, SETUID, SETGID)",
     },
     "run_as_root": {
         "severity": "MEDIUM",
@@ -298,6 +299,31 @@ SENSITIVE_HOST_PATHS = {
     "/run/crio/crio.sock": "crio_socket_mount",
 }
 
+# Longest path first: matching iterates this order so /etc/kubernetes resolves to
+# the kube check rather than the shorter /etc one, and a socket path wins over
+# its parent directory. Built once, at import.
+SENSITIVE_PATHS_ORDERED = sorted(SENSITIVE_HOST_PATHS.items(), key=lambda kv: -len(kv[0]))
+
+
+def match_sensitive_host_path(host_path: str):
+    """Return the check id for the MOST SPECIFIC sensitive path prefix.
+
+    Matching is component-bounded (``/etc`` matches ``/etc`` and ``/etc/x`` but
+    never ``/etcfoo``), and the bare root ``/`` matches only exactly — otherwise
+    it would swallow every other path. Returns None when nothing matches.
+    """
+    if not host_path:
+        return None
+    for sensitive_path, check_id in SENSITIVE_PATHS_ORDERED:
+        if sensitive_path == "/":
+            if host_path == "/":
+                return check_id
+            continue
+        base = sensitive_path.rstrip("/")
+        if host_path == base or host_path.startswith(base + "/"):
+            return check_id
+    return None
+
 SECRET_PATTERNS = [
     r"(?i)(password|passwd|secret|token|api[_-]?key|private[_-]?key|access[_-]?key|credential)\s*[:=]\s*\S+",
 ]
@@ -339,8 +365,6 @@ class AdmissionReviewer:
         self.findings = []
         self.passed_checks = []
 
-        pod_name = pod.get("metadata", {}).get("name", "unnamed")
-        namespace = pod.get("metadata", {}).get("namespace", "default")
         spec = pod.get("spec", {})
 
         # Pod-level checks
@@ -397,13 +421,11 @@ class AdmissionReviewer:
         for volume in volumes:
             if "hostPath" in volume:
                 host_path = volume["hostPath"].get("path", "")
-                matched = False
-                for sensitive_path, check_id in SENSITIVE_HOST_PATHS.items():
-                    if host_path == sensitive_path or host_path.startswith(sensitive_path):
-                        self._add_finding(check_id)
-                        matched = True
-                        break
-                if not matched:
+                check_id = match_sensitive_host_path(host_path)
+                if check_id:
+                    self._add_finding(check_id,
+                                      description=f"Container mounts sensitive hostPath: {host_path}")
+                else:
                     self._add_finding("host_path_mount",
                                       description=f"Container mounts hostPath: {host_path}",
                                       remediation="Use PVC, configMap, secret, or emptyDir instead of hostPath")
@@ -444,7 +466,8 @@ class AdmissionReviewer:
             dangerous = add_caps & DANGEROUS_CAPABILITIES
             if dangerous:
                 self._add_finding("dangerous_capabilities",
-                                  description=f"Container {container_name} has dangerous capabilities: {', '.join(sorted(dangerous))}")
+                                  description=f"Container {container_name} has dangerous capabilities: "
+                                              f"{', '.join(sorted(dangerous))}")
 
             # Run as user
             if not sc.get("runAsNonRoot", False):
@@ -507,7 +530,8 @@ class AdmissionReviewer:
                     for pattern in SECRET_PATTERNS:
                         if re.search(pattern, f"{env['name']}={env['value']}"):
                             self._add_finding("env_secret_hardcoded",
-                                              description=f"Container {container_name} env var {env['name']} appears to contain a secret",
+                                              description=f"Container {container_name} env var "
+                                                          f"{env['name']} appears to contain a secret",
                                               remediation="Use secretKeyRef to reference Kubernetes secrets")
                             break
 
@@ -540,7 +564,8 @@ class AdmissionReviewer:
                 ]:
                     if mount_path == sock_path or mount_path.startswith(sock_path + "/"):
                         self._add_finding(check_id,
-                                          description=f"Container {container_name} mounts runtime socket at {mount_path}")
+                                          description=f"Container {container_name} mounts "
+                                                      f"runtime socket at {mount_path}")
                         break
 
                 # Sensitive host paths via volumeName lookup (mountPath alone can't
@@ -548,19 +573,21 @@ class AdmissionReviewer:
                 for volume in volumes:
                     if volume.get("name") == mount.get("name") and "hostPath" in volume:
                         host_path = volume["hostPath"].get("path", "")
-                        for sensitive_path, check_id in SENSITIVE_HOST_PATHS.items():
-                            if host_path == sensitive_path or host_path.startswith(sensitive_path + "/"):
-                                if check_id not in ["docker_socket_mount", "containerd_socket_mount", "crio_socket_mount"]:
-                                    self._add_finding(check_id,
-                                                      description=f"Container {container_name} mounts hostPath {host_path} at {mount_path}")
-                                break
+                        check_id = match_sensitive_host_path(host_path)
+                        if check_id and check_id not in [
+                            "docker_socket_mount", "containerd_socket_mount", "crio_socket_mount",
+                        ]:
+                            self._add_finding(check_id,
+                                              description=f"Container {container_name} mounts hostPath "
+                                                          f"{host_path} at {mount_path}")
 
                 if mount_path == "/proc":
                     self._add_finding("proc_mount",
                                       description=f"Container {container_name} mounts /proc")
                     if "SYS_ADMIN" in add_caps:
                         self._add_finding("sys_admin_with_proc_mount",
-                                          description=f"Container {container_name} has SYS_ADMIN with /proc mount - cgroup escape possible")
+                                          description=f"Container {container_name} has SYS_ADMIN with /proc "
+                                                      f"mount - cgroup escape possible")
 
                 if mount_path == "/sys/fs/cgroup" or mount_path.startswith("/sys/fs/cgroup/"):
                     self._add_finding("cgroup_volume_mount",
@@ -582,7 +609,8 @@ class AdmissionReviewer:
                     # Only flag if name suggests sensitive data
                     if any(kw in volume.get("name", "").lower() for kw in ["secret", "token", "credential", "key"]):
                         self._add_finding("empty_dir_medium",
-                                          description=f"Volume {volume['name']} uses disk-backed emptyDir for sensitive data")
+                                          description=f"Volume {volume['name']} uses disk-backed "
+                                                      f"emptyDir for sensitive data")
 
         # Check if any security context exists at all
         if not spec.get("securityContext") and all(
@@ -615,7 +643,7 @@ class AdmissionReviewer:
             value = self._get_path_value(pod, policy_path)
 
             if policy_kind == "required":
-                if value is None or value == False or value == "":
+                if value is None or value is False or value == "":
                     policy_findings.append(Finding(
                         severity=policy.get("severity", "HIGH"),
                         check=policy_name,
@@ -768,7 +796,7 @@ def main():
     policies = load_policies(args.policies) if args.policies else {}
 
     reviewer = AdmissionReviewer()
-    builtin_findings = reviewer.review_pod(pod)
+    reviewer.review_pod(pod)
     policy_findings = reviewer.review_against_policies(pod, policies) if policies else []
 
     report = reviewer.generate_report(pod, policy_findings)
@@ -776,7 +804,7 @@ def main():
     if args.json:
         print(json.dumps(asdict(report), indent=2))
     else:
-        print(f"\n=== Admission Review Report ===")
+        print("\n=== Admission Review Report ===")
         print(f"Pod: {report.pod_name}")
         print(f"Namespace: {report.namespace}")
         print(f"Risk Score: {report.risk_score}")

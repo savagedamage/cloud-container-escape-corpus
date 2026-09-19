@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "escape-corpus"
-version = "1.0.0"
+version = "1.1.0"
 description = "Container escape research corpus: OCI image diffing, runtime drift baselining, and pod admission review"
 readme = "README.md"
 license = { text = "MIT" }
@@ -27,18 +27,58 @@ dependencies = ["pyyaml>=6.0"]
 dev = [
     "pytest>=7.0",
     "jsonschema>=4.18",
+    "pytest-cov>=4.1",
+    "ruff>=0.5",
+    "sigma-cli>=0.6",   # validates the Sigma rules; used by CI and verify.sh
+]
+mcp = [
+    "fastmcp>=2.0",
 ]
 [project.urls]
 Homepage = "https://github.com/savagedamage/cloud-container-escape-corpus"
 
 [project.scripts]
 escape-corpus = "escape_corpus.cli:main"
+escape-corpus-mcp = "escape_corpus.mcp_server:main"
 image-diff = "escape_corpus.image_diff:main"
 runtime-baseline = "escape_corpus.runtime_baseline:main"
 admission-review = "escape_corpus.admission_review:main"
 
 [tool.setuptools]
 packages = ["escape_corpus"]
+
+[tool.ruff]
+# 120 rather than 100: the analysis tools carry long, descriptive
+# finding/f-string lines; wrapping them hurts readability without adding
+# safety. Anything above 120 is wrapped by hand.
+line-length = 120
+target-version = "py310"
+extend-exclude = ["*.egg-info"]
+
+[tool.ruff.lint]
+# Deliberately not the maximal rule set: this is a small, dependency-light
+# toolkit, so the gate targets correctness (pyflakes), style drift
+# (pycodestyle), and import hygiene rather than stylistic preference.
+select = ["E", "F", "W", "I"]
+ignore = [
+  "E731",  # lambda assignment is used for compact argparse dispatch
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]   # test names and assertion messages read better unwrapped
+
+[tool.coverage.run]
+source = ["escape_corpus"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = true
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+]
 
 [tool.setuptools.data-files]
 "share/escape-corpus/corpus" = [
@@ -52,6 +92,8 @@ packages = ["escape_corpus"]
 "share/escape-corpus/corpus/detection" = ["corpus/detection/index.yaml"]
 "share/escape-corpus/corpus/detection/sigma" = ["corpus/detection/sigma/*"]
 "share/escape-corpus/corpus/detection/falco" = ["corpus/detection/falco/*"]
+"share/escape-corpus/corpus/benchmarks" = ["corpus/benchmarks/*"]
+"share/escape-corpus/docs" = ["docs/roadmap.md"]
 "share/escape-corpus/schemas" = ["schemas/*.json"]
 
 [tool.pytest.ini_options]

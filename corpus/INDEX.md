@@ -8,14 +8,14 @@ equivalent is [`taxonomy.json`](taxonomy/taxonomy.json) + [`index.yaml`](index.y
 | You want to… | Go to |
 |---|---|
 | Understand what this is | [`../README.md`](../README.md) |
-| Get the 10-technique overview | [`taxonomy/container-escape-taxonomy.md`](taxonomy/container-escape-taxonomy.md) |
+| Get the 12-technique overview | [`taxonomy/container-escape-taxonomy.md`](taxonomy/container-escape-taxonomy.md) |
 | Map information leakage paths | [`side-channels/side-channel-inventory.md`](side-channels/side-channel-inventory.md) |
 | Stand up a lab | [`lab/LAB-SETUP.md`](lab/LAB-SETUP.md) |
 | Browse techniques (CLI) | `escape-corpus techniques` |
 | Browse detection rules (CLI) | `escape-corpus rules` |
 | Browse side-channels (CLI) | `escape-corpus side-channels` |
 
-## Techniques (CE-001 … CE-010)
+## Techniques (CE-001 … CE-012)
 
 | ID | Technique | Risk | Playbook |
 |---|---|---|---|
@@ -29,11 +29,13 @@ equivalent is [`taxonomy.json`](taxonomy/taxonomy.json) + [`index.yaml`](index.y
 | CE-008 | Kernel exploit via syscall exposure | HIGH | [techniques/CE-008](techniques/CE-008-kernel-syscall-exploit.md) |
 | CE-009 | Namespace escape via /proc/self/ns | MEDIUM | [techniques/CE-009](techniques/CE-009-namespace-escape.md) |
 | CE-010 | Capability-based escape chains | HIGH | [techniques/CE-010](techniques/CE-010-capability-chains.md) |
+| CE-011 | IMDS instance metadata credential theft | CRITICAL | [techniques/CE-011](techniques/CE-011-imds-instance-metadata-theft.md) |
+| CE-012 | Workload identity token theft | HIGH | [techniques/CE-012](techniques/CE-012-workload-identity-token-theft.md) |
 
 ## Detection rules
 
-- 11 Sigma rules → [`detection/sigma/`](detection/sigma/) (index: [detection/index.yaml](detection/index.yaml))
-- 8 Falco rules → [`detection/falco/`](detection/falco/)
+- 13 Sigma rules → [`detection/sigma/`](detection/sigma/) (index: [detection/index.yaml](detection/index.yaml))
+- 10 Falco rules → [`detection/falco/`](detection/falco/)
 
 Each playbook's "Detection" section names the rules that cover it; each rule
 declares its `detects:` technique IDs in the detection index.

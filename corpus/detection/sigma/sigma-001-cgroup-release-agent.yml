@@ -9,7 +9,6 @@ date: 2026-09-16
 tags:
   - attack.t1611
   - attack.t1068
-  - attack.escape
 logsource:
   category: process_creation
   product: linux
